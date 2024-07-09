@@ -1,3 +1,4 @@
+import { Button } from "@mantine/core";
 import Image from "next/image";
 
 export default function Home() {
@@ -51,6 +52,7 @@ export default function Home() {
             <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
               -&gt;
             </span>
+            <Button>Heyyy</Button>
           </h2>
           <p className="m-0 max-w-[30ch] text-sm opacity-50">
             Find in-depth information about Next.js features and API.
