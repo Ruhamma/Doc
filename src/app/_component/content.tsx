@@ -17,12 +17,16 @@ const Content: React.FC = () => {
   if (!section) return <div>Section not found</div>;
 
   return (
-    <div className="content">
-      <h1>{section.title}</h1>
-      <p className="h-[100vh]">{section.content}</p>
+    <div className="content p-10 px-20">
+      <p className="text-3xl font-bold text-dark py-4 open-sans">
+        {section.title}
+      </p>
+      <p className="h-[50vh] text-dark">{section.content}</p>
       {section.subSections.map((sub, index) => (
         <div key={index} id={slugify(sub.title)}>
-          <h2>{sub.title}</h2>
+          <p className="text-xl font-semibold py-2 open-sans text-dark">
+            {sub.title}
+          </p>
           <p>{sub.content}</p>
         </div>
       ))}

@@ -1,6 +1,6 @@
 import React from "react";
 import { Autocomplete, Burger, Group } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
+import { IconMoon, IconSearch } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import Image from "next/image";
 
@@ -12,7 +12,7 @@ const links = [
 ];
 
 const Header = () => {
-//   const [opened, { toggle }] = useDisclosure(false);
+  //   const [opened, { toggle }] = useDisclosure(false);
 
   const items = links.map((link) => (
     <a
@@ -28,12 +28,7 @@ const Header = () => {
     <header className="p-4 px-10 shadow-md sticky">
       <div className="flex justify-between items-center">
         <Group>
-          <Image
-            src={`/logo.svg`}
-            alt="perago logo"
-            width="110"
-            height="30"
-          />
+          <Image src={`/logo.svg`} alt="perago logo" width="110" height="30" />
         </Group>
 
         <Group>
@@ -51,6 +46,9 @@ const Header = () => {
             }}
             className=""
           />
+          <div className="">
+            <IconMoon className="text-dark" />
+          </div>
         </Group>
       </div>
     </header>
