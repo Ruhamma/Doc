@@ -1,28 +1,19 @@
-'use client'
+"use client";
 
 import React from "react";
 import { usePathname } from "next/navigation";
 import { useGetDocsQuery } from "@/store/api";
-import { slugify } from "@/utils";
+import { getDocumentAndSection, slugify } from "@/utils";
 
 const Subsections: React.FC = () => {
-  const { data, error, isLoading } = useGetDocsQuery();
-
-
-   const pathname = usePathname();
-   const slug = pathname.split("/").pop();
-   const docTitle = pathname.split("/")[2];
-   const sectionTitle = slug;
-   const document = data?.find((doc) => slugify(doc.title) === docTitle);
-   if (!document) return <div>Document not found</div>;
-
-   const section = document.sections.find(
-     (sec) => slugify(sec.title) === sectionTitle
-   );
+  const pathname = usePathname();
+  const { document, section, isLoading, error } =
+    getDocumentAndSection(pathname);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
 
+  if (!document) return <div>Document not found</div>;
   if (!section) return <div>Section not found</div>;
 
   return (
