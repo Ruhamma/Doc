@@ -1,0 +1,43 @@
+"use client";
+import React from "react";
+import Link from "next/link";
+import { useGetDocsQuery } from "@/store/api";
+import { slugify } from "@/utils";
+
+const Sidebar: React.FC = () => {
+  const { data, error, isLoading } = useGetDocsQuery();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading data</div>;
+
+  return (
+    <div className="sidebar p-4 bg-gray-100 border-r border-gray-300">
+      <ul className="tree list-none pl-0">
+        {data?.map((doc) => (
+          <li key={doc.title} className="mb-2">
+            <p className="font-semibold text-white">{doc.title}</p>
+            {doc.sections.length > 0 && (
+              <ul className="list-none pl-4 mt-1 border-l border-gray-300">
+                {doc.sections.map((section) => (
+                  <li key={section.title} className="mb-1">
+                    <Link
+                      href={`/test/${slugify(doc.title)}/${slugify(
+                        section.title
+                      )}`}
+                      passHref
+                      className="text-gray-300 hover:underline"
+                    >
+                      {section.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default Sidebar;

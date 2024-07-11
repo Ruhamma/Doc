@@ -31,3 +31,24 @@ body {
     text-wrap: balance;
   }
 }
+
+.container {
+  display: flex;
+}
+
+.sidebar {
+  width: 20%;
+  background-color: #750f0f3f;
+  padding: 1rem;
+}
+
+.content {
+  width: 60%;
+  padding: 1rem;
+}
+
+.subsections {
+  width: 20%;
+  background-color: #0e872824;
+  padding: 1rem;
+}
