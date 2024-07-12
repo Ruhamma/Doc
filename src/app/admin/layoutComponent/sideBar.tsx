@@ -3,7 +3,11 @@ import React, { useState, useEffect } from "react";
 import { useGetDocsQuery } from "@/store/api";
 import { IconChevronDown, IconChevronRight } from "@tabler/icons-react";
 
-const SideBar: React.FC = () => {
+interface SideBarProps {
+  onTitleSelect: (title: string) => void;
+}
+
+const SideBar: React.FC<SideBarProps> = ({ onTitleSelect }) => {
   const { data, error, isLoading } = useGetDocsQuery();
 
   const [collapsedDocs, setCollapsedDocs] = useState<boolean[]>([]);
@@ -56,7 +60,12 @@ const SideBar: React.FC = () => {
                 )}
               </button>
             )}
-            <div className="font-bold">{doc.title}</div>
+            <div
+              className="font-bold cursor-pointer"
+              onClick={() => onTitleSelect(doc.title)}
+            >
+              {doc.title}
+            </div>
           </div>
 
           {!collapsedDocs[docIndex] && doc.sections.length > 0 && (
@@ -77,7 +86,12 @@ const SideBar: React.FC = () => {
                         )}
                       </button>
                     )}
-                    <div className="font-semibold">{section.title}</div>
+                    <div
+                      className="font-semibold cursor-pointer"
+                      onClick={() => onTitleSelect(section.title)}
+                    >
+                      {section.title}
+                    </div>
                   </div>
 
                   {!collapsedSections[docIndex]?.[sectionIndex] &&
@@ -85,8 +99,12 @@ const SideBar: React.FC = () => {
                     section.subSections.length > 0 && (
                       <div className="ml-4">
                         {section.subSections.map((subSec, subSecIndex) => (
-                          <div key={subSecIndex} className="ml-2">
-                            <div className="font-normal">{subSec.title}</div>
+                          <div
+                            key={subSecIndex}
+                            className="ml-2 font-normal cursor-pointer"
+                            onClick={() => onTitleSelect(subSec.title)}
+                          >
+                            {subSec.title}
                           </div>
                         ))}
                       </div>
