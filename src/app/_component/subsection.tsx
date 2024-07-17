@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useGetDocsQuery } from "@/store/api";
-import { getDocumentAndSection, slugify } from "@/utils";
+import { getDocumentAndSection } from "@/utils";
+import { slugify } from "@/utils/slugify";
 import { Group, Stack, Text } from "@mantine/core";
 import { IconList } from "@tabler/icons-react";
 const Subsections: React.FC = () => {

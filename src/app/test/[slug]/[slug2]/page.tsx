@@ -10,7 +10,7 @@ const SlugPage: React.FC = () => (
     <div className="container">
       <Sidebar />
       <Content />
-      <Subsections />
+      {/* <Subsections /> */}
     </div>
   </div>
 );
