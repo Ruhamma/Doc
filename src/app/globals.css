@@ -25,16 +25,14 @@ body {
 
 .sidebar {
   width: 20%;
-  padding: 1rem;
 }
 
 .content {
   width: 60%;
-  padding: 1rem;
 }
 
 .subsections {
   width: 20%;
-  background-color: #0e872824;
+  /* background-color: #0e872824; */
   padding: 1rem;
 }
