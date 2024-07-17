@@ -1,0 +1,78 @@
+[
+    {
+      "title": "User",
+      "sections": [
+        {
+          "title": "Introduction",
+          "content": "This section provides an overview of the core concepts...",
+          "subSections": [
+            {
+              "title": "What is it?",
+              "content": "A detailed explanation of the system and its purpose..."
+            },
+            {
+              "title": "Key Features",
+              "content": "A list and explanation of the system's key functionalities..."
+            }
+          ]
+        },
+        {
+          "title": "Getting Started",
+          "content": "Guidelines to help you get started with the system...",
+          "subSections": [
+            {
+              "title": "Installation",
+              "content": "A step-by-step guide on installing and setting up the system..."
+            },
+            {
+              "title": "Creating Your First Project",
+              "content": "Instructions on how to create and set up your first project..."
+            }
+          ]
+        },
+        {
+          "title": "Guides",
+          "content": "Comprehensive guides on various topics...",
+          "subSections": [
+            {
+              "title": "Basic Concepts",
+              "content": "An introduction to the basic concepts used within the system..."
+            },
+            {
+              "title": "Advanced Topics",
+              "content": "In-depth discussions on advanced topics and features..."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Developer Reference",
+      "sections": [
+        {
+          "title": "Core Classes",
+          "content": "An introduction to the core classes used within the system...",
+          "subSections": [
+            {
+              "title": "MyClass",
+              "content": "Detailed information about the MyClass class, including methods, properties..."
+            },
+            {
+              "title": "AnotherClass",
+              "content": "Explanation of the AnotherClass class..."
+            }
+          ]
+        },
+        {
+          "title": "API Reference",
+          "content": "Comprehensive reference for the API...",
+          "subSections": []
+        },
+        {
+          "title": "FAQ",
+          "content": "Frequently asked questions and their answers...",
+          "subSections": []
+        }
+      ]
+    }
+  ]
