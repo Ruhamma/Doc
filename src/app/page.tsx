@@ -45,6 +45,9 @@ export default function Home() {
               className="shadow-xl px-10"
               size="lg"
               color="#595959"
+              onClick={() => {
+                router.push("/admin");
+              }}
             >
               Secondary
             </Button>
