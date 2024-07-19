@@ -14,6 +14,9 @@ const config: Config = {
         tertiary: "#C1F1CC",
         dark: "#404040",
       },
+      fontSize: {
+        "2xl": "1.75rem", // Example custom size
+      },
     },
   },
   plugins: [],

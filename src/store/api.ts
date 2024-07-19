@@ -3,7 +3,7 @@ import { DocsData, Section, FormValues } from "../types";
 
 export const api = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3002" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost.localdomain:3000" }),
   endpoints: (builder) => ({
     getDocs: builder.query<DocsData[], void>({
       query: () => "/newData",
