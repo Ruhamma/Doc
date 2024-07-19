@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-
 import type { MDXEditorMethods } from "@mdxeditor/editor";
-import InitializedMDXEditor from "./InitializedMDXEditor";
+import { ForwardRefEditor } from "./ForwardRefEditor";
 
 export default function MdxEditor() {
   const ref = useRef<MDXEditorMethods>(null);
@@ -15,15 +14,12 @@ export default function MdxEditor() {
     <div>
       {isClient && (
         <>
-          {/* <button onClick={() => ref.current?.setMarkdown("new markdown")}>
-            Set new markdown
-          </button> */}
           <button onClick={() => console.log(ref.current?.getMarkdown())}>
             Get markdown
           </button>
-          <InitializedMDXEditor
+          <ForwardRefEditor
             ref={ref}
-            markdown="hello world"
+            markdown="## hello world"
             onChange={console.log}
           />
         </>

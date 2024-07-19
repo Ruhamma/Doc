@@ -13,6 +13,7 @@ body {
 .open-sans {
   font-family: "Open Sans", sans-serif;
 }
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -33,11 +34,8 @@ body {
 
 .subsections {
   width: 20%;
-  /* background-color: #0e872824; */
   padding: 1rem;
 }
-
-
 
 .toolbar {
   display: flex;
@@ -48,5 +46,16 @@ body {
 .toolbar button {
   padding: 5px 10px;
   cursor: pointer;
+}
+.navbar {
+  width: 100%; /* Ensure the navbar spans the full width */
+}
+
+.sidebar {
+  height: calc(100vh - 4rem); /* Adjust height to account for the navbar */
+}
+
+.editor {
+  flex-grow: 1; /* Allow the editor to take up the remaining space */
 }
 

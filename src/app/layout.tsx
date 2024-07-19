@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter,Raleway,Open_Sans } from "next/font/google";
+import { Inter, Raleway, Open_Sans } from "next/font/google";
 import "./globals.css";
 import "@mantine/core/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Providers } from "@/store/provider";
-
+import "@mdxeditor/editor/style.css";
 const inter = Inter({ subsets: ["latin"] });
 const raleway = Raleway({ subsets: ["latin"] });
 const openSans = Open_Sans({ subsets: ["latin"] });

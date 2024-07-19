@@ -36,6 +36,7 @@
     "dayjs": "^1.11.11",
     "embla-carousel-react": "^8.1.6",
     "lowlight": "^3.1.0",
+    "nanoid": "^5.0.7",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
@@ -47,6 +48,7 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.13",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
