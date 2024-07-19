@@ -1,3 +1,4 @@
+"use client";
 import { useRef } from "react";
 import {
   MDXEditor,
@@ -11,8 +12,6 @@ import {
   toolbarPlugin,
   BlockTypeSelect,
   CodeToggle,
-  InsertTable,
-  InsertImage,
   InsertThematicBreak,
   ConditionalContents,
   InsertCodeBlock,
@@ -25,7 +24,6 @@ import {
   SandpackConfig,
   SandpackPreset,
 } from "@mdxeditor/editor";
-import "@mdxeditor/editor/style.css";
 
 const defaultSnippetContent = `
 export default function App() {
@@ -65,6 +63,7 @@ const InitializedMDXEditor = ({ ...props }) => {
     <div>
       <MDXEditor
         ref={editorRef}
+        contentEditableClassName="prose"
         markdown="Hello world"
         plugins={[
           headingsPlugin(),
@@ -72,7 +71,6 @@ const InitializedMDXEditor = ({ ...props }) => {
           quotePlugin(),
           thematicBreakPlugin(),
           markdownShortcutPlugin(),
-
           codeBlockPlugin({ defaultCodeBlockLanguage: "js" }),
           sandpackPlugin({ sandpackConfig: simpleSandpackConfig }),
           codeMirrorPlugin({
@@ -97,7 +95,6 @@ const InitializedMDXEditor = ({ ...props }) => {
                         <BoldItalicUnderlineToggles />
                         <BlockTypeSelect />
                         <CodeToggle />
-
                         <InsertThematicBreak />
                         <InsertCodeBlock />
                         <InsertSandpack />
