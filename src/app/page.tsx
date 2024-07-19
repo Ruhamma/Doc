@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { Button, Flex, Group, Stack, Text } from "@mantine/core";
 import Image from "next/image";
 import Header from "./_component/header";
@@ -45,6 +45,9 @@ export default function Home() {
               className="shadow-xl px-10"
               size="lg"
               color="#595959"
+              onClick={() => {
+                router.push("/admin");
+              }}
             >
               Secondary
             </Button>
