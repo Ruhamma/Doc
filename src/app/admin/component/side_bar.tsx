@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Button, Modal, TextInput, Group } from "@mantine/core";
+import { Button, Modal, TextInput, Group, Stack, Flex } from "@mantine/core";
 import { nanoid } from "nanoid";
 import { SidebarProps, TreeNodeProps, Node } from "@/types/treeNode";
 
 const TreeNode = ({ node, onNodeClick }: TreeNodeProps) => (
   <div className="ml-4 mt-2">
     <div>
-      <Button variant="subtle" onClick={() => onNodeClick(node)}>
+      <Button variant="subtle" color="green" onClick={() => onNodeClick(node)}>
         {node.title}
       </Button>
     </div>
@@ -58,8 +58,10 @@ const SideBar = ({ onNodeClick }: SidebarProps) => {
   };
 
   return (
-    <div className="sidebar p-6 px-10 text-dark border-r border-gray-300 min-h-[100vh]">
-      <Button onClick={handleAddTitle}>Add Title</Button>
+    <div className="sidebar p-6 ">
+      <Button color="green" onClick={handleAddTitle}>
+        Add Title
+      </Button>
       {nodes.map((node) => (
         <TreeNode key={node.id} node={node} onNodeClick={onNodeClick} />
       ))}
@@ -68,25 +70,40 @@ const SideBar = ({ onNodeClick }: SidebarProps) => {
         onClose={() => setOpened(false)}
         title="Add Title and Subtitles"
       >
-        <TextInput
-          label="Title"
-          value={newTitle}
-          onChange={(event) => setNewTitle(event.currentTarget.value)}
-        />
-        {newSubtitles.map((subtitle, index) => (
+        <Flex direction={"column"} gap={"md"}>
           <TextInput
-            key={index}
-            label={`Subtitle ${index + 1}`}
-            value={subtitle}
-            onChange={(event) =>
-              handleSubtitleChange(index, event.currentTarget.value)
-            }
+            label="Title"
+            value={newTitle}
+            onChange={(event) => setNewTitle(event.currentTarget.value)}
+            variant="filled"
+            styles={{
+              input: { border: "1px solid green", borderRadius: "4px" },
+            }}
           />
-        ))}
-        <Button onClick={handleAddSubtitleField}>Add Subtitle</Button>
-        <Group mt="md">
-          <Button onClick={handleModalSubmit}>Submit</Button>
-        </Group>
+          {newSubtitles.map((subtitle, index) => (
+            <TextInput
+              key={index}
+              label={`Subtitle ${index + 1}`}
+              value={subtitle}
+              onChange={(event) =>
+                handleSubtitleChange(index, event.currentTarget.value)
+              }
+              variant="filled"
+              styles={{
+                input: { border: "1px solid green", borderRadius: "4px" },
+              }}
+            />
+          ))}
+          <Stack>
+            <Button color="green" onClick={handleAddSubtitleField}>
+              Add Subtitle
+            </Button>
+
+            <Button color="green" onClick={handleModalSubmit}>
+              Submit
+            </Button>
+          </Stack>
+        </Flex>
       </Modal>
     </div>
   );
