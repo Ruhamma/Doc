@@ -1,33 +1,43 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { ForwardRefEditor } from "./ForwardRefEditor";
 
-const MdxEditor = () => {
-  const ref = useRef<MDXEditorMethods>(null);
-  const [isClient, setIsClient] = useState(false);
-  const [markdown, setMarkdown] = useState("Hello world");
+interface MdxEditorProps {
+  markdown: string;
+  onChange: (newContent: string) => void;
+}
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+const MdxEditor = forwardRef<MDXEditorMethods, MdxEditorProps>(
+  ({ markdown, onChange }, ref) => {
+    const localRef = useRef<MDXEditorMethods>(null);
+    const [isClient, setIsClient] = useState(false);
 
-  const handleChange = (newContent: string) => {
-    setMarkdown(newContent);
-  };
+    useImperativeHandle(ref, () => localRef.current!);
 
-  return (
-    <div>
-      {isClient && (
-        <>
+    useEffect(() => {
+      setIsClient(true);
+    }, []);
+
+    return (
+      <div>
+        {isClient && (
           <ForwardRefEditor
-            ref={ref}
+            ref={localRef}
             markdown={markdown}
-            onChange={handleChange}
+            onChange={onChange}
           />
-        </>
-      )}
-    </div>
-  );
-};
+        )}
+      </div>
+    );
+  }
+);
+
+MdxEditor.displayName = "MdxEditor";
 
 export default MdxEditor;
