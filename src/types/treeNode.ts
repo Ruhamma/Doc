@@ -1,15 +1,16 @@
+// types/treeNode.ts
 export interface Node {
   id: string;
   title: string;
   subtitles: Node[];
-}
-
-export interface SidebarProps {
-  onNodeClick: (node: Node) => void;
+  content?: string;
 }
 
 export interface TreeNodeProps {
   node: Node;
-  onAddSubtitle: (parentId: string) => void;
+  onNodeClick: (node: Node) => void;
+}
+
+export interface SidebarProps {
   onNodeClick: (node: Node) => void;
 }

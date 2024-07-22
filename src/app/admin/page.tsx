@@ -1,40 +1,35 @@
 "use client";
-import React, { useState } from "react";
-//import Demo from "./layoutComponent/tab";
-//import SideBar from "./layoutComponent/sideBar";
-import Image from "next/image";
-import adminIcon from "../../../public/Vector.svg";
-import { Tabs, rem } from "@mantine/core";
-
+import { useState } from "react";
+import { Box } from "@mantine/core";
 import Navbar from "./component/Navbar";
-import { SideBar } from "./component/side_bar";
+import Sidebar from "./component/side_bar";
 import MdxEditor from "./component/mdxeditor/mdxEditor";
+import { Node } from "@/types/treeNode";
 
-// import Main from "./component/Main";
+export default function Admin() {
+  const [activeContent, setActiveContent] = useState("");
 
-export default function admin() {
-  const [selectedTitle, setSelectedTitle] = useState<string>("");
-  const [showForm, setShowForm] = useState(false);
+  const handleNodeClick = (node: Node) => {
+    setActiveContent(node.content || "");
+  };
 
-  const handleCreateClick = () => {
-    setShowForm(true);
+  const handleEditorChange = (newContent: string) => {
+    setActiveContent(newContent);
   };
 
   return (
-    <div className="flex flex-col w-full h-screen">
-      {/* Fixed Navbar */}
-      <div className="navbar bg-gray-300 h-16 w-full fixed top-0 z-10">
+    <Box className="flex flex-col w-full h-screen">
+      <Box className="navbar w-full bg-gray-300 h-16">
         <Navbar />
-      </div>
-      {/* Main content with sidebar and editor */}
-      <div className="flex flex-row w-full h-full pt-16 overflow-hidden">
-        <div className="sidebar w-1/5 bg-gray-200 h-full overflow-y-auto">
-          <SideBar />
-        </div>
-        <div className="flex flex-col w-4/5 p-4 h-full overflow-y-auto">
-          <MdxEditor />
-        </div>
-      </div>
-    </div>
+      </Box>
+      <Box className="flex flex-row h-full">
+        <Box className="sidebar w-1/5 bg-gray-200">
+          <Sidebar onNodeClick={handleNodeClick} />
+        </Box>
+        <Box className="editor flex-grow">
+          <MdxEditor markdown={activeContent} onChange={handleEditorChange} />
+        </Box>
+      </Box>
+    </Box>
   );
 }

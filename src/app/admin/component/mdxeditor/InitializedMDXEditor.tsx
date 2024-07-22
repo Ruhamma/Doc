@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+
 import {
   MDXEditor,
   UndoRedo,
@@ -23,7 +23,9 @@ import {
   codeMirrorPlugin,
   SandpackConfig,
   SandpackPreset,
+  MDXEditorMethods,
 } from "@mdxeditor/editor";
+import { forwardRef } from "react";
 
 const defaultSnippetContent = `
 export default function App() {
@@ -55,16 +57,22 @@ const simpleSandpackConfig: SandpackConfig = {
   ],
   defaultPreset: "",
 };
+interface InitializedMDXEditorProps {
+  markdown: string;
+  onChange: (newContent: string) => void;
+}
 
-const InitializedMDXEditor = ({ ...props }) => {
-  const editorRef = useRef(null);
-
+const InitializedMDXEditor = forwardRef<
+  MDXEditorMethods,
+  InitializedMDXEditorProps
+>(({ markdown, onChange = () => {} }, ref) => {
   return (
     <div>
       <MDXEditor
-        ref={editorRef}
+        ref={ref}
         contentEditableClassName="prose"
-        markdown="Hello world"
+        markdown={markdown}
+        onChange={onChange}
         plugins={[
           headingsPlugin(),
           listsPlugin(),
@@ -106,10 +114,11 @@ const InitializedMDXEditor = ({ ...props }) => {
             ),
           }),
         ]}
-        {...props}
       />
     </div>
   );
-};
+});
+
+InitializedMDXEditor.displayName = "InitializedMDXEditor";
 
 export default InitializedMDXEditor;
