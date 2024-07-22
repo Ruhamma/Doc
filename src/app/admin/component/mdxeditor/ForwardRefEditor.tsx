@@ -4,14 +4,11 @@ import dynamic from "next/dynamic";
 import type { MDXEditorMethods, MDXEditorProps } from "@mdxeditor/editor";
 
 const Editor = dynamic(() => import("./InitializedMDXEditor"), {
-  // Make sure we turn SSR off
-  ssr: false,
+	ssr: false,
 });
 
 export const ForwardRefEditor = forwardRef<MDXEditorMethods, MDXEditorProps>(
-  ({ onChange = () => {}, ...props }, ref) => (
-    <Editor {...props} onChange={onChange} ref={ref} />
-  )
+	(props, ref) => <Editor {...props} editorRef={ref} />
 );
 
 ForwardRefEditor.displayName = "ForwardRefEditor";
