@@ -1,31 +1,32 @@
 "use client";
 
 import {
-  MDXEditor,
-  UndoRedo,
-  BoldItalicUnderlineToggles,
-  headingsPlugin,
-  listsPlugin,
-  quotePlugin,
-  thematicBreakPlugin,
-  markdownShortcutPlugin,
-  toolbarPlugin,
-  BlockTypeSelect,
-  CodeToggle,
-  InsertThematicBreak,
-  ConditionalContents,
-  InsertCodeBlock,
-  InsertSandpack,
-  ShowSandpackInfo,
-  ChangeCodeMirrorLanguage,
-  codeBlockPlugin,
-  sandpackPlugin,
-  codeMirrorPlugin,
-  SandpackConfig,
-  SandpackPreset,
-  MDXEditorMethods,
+	MDXEditor,
+	UndoRedo,
+	BoldItalicUnderlineToggles,
+	headingsPlugin,
+	listsPlugin,
+	quotePlugin,
+	thematicBreakPlugin,
+	markdownShortcutPlugin,
+	toolbarPlugin,
+	BlockTypeSelect,
+	CodeToggle,
+	InsertThematicBreak,
+	ConditionalContents,
+	InsertCodeBlock,
+	InsertSandpack,
+	ShowSandpackInfo,
+	ChangeCodeMirrorLanguage,
+	codeBlockPlugin,
+	sandpackPlugin,
+	codeMirrorPlugin,
+	SandpackConfig,
+	SandpackPreset,
+	MDXEditorMethods,
+	MDXEditorProps,
 } from "@mdxeditor/editor";
-import { forwardRef } from "react";
+import { ForwardedRef, forwardRef } from "react";
 
 const defaultSnippetContent = `
 export default function App() {
@@ -39,85 +40,87 @@ export default function App() {
 `.trim();
 
 const simpleSandpackConfig: SandpackConfig = {
-  presets: [
-    {
-      label: "React",
-      name: "react",
-      meta: "live react",
-      sandpackTemplate: "react",
-      sandpackTheme: "light",
-      files: {
-        "/App.js": {
-          code: defaultSnippetContent,
-          active: true,
-        },
-      },
-      snippetFileName: "/App.js",
-    } as unknown as SandpackPreset,
-  ],
-  defaultPreset: "",
+	presets: [
+		{
+			label: "React",
+			name: "react",
+			meta: "live react",
+			sandpackTemplate: "react",
+			sandpackTheme: "light",
+			files: {
+				"/App.js": {
+					code: defaultSnippetContent,
+					active: true,
+				},
+			},
+			snippetFileName: "/App.js",
+		} as unknown as SandpackPreset,
+	],
+	defaultPreset: "",
 };
-interface InitializedMDXEditorProps {
-  markdown: string;
-  onChange: (newContent: string) => void;
+interface InitializedMDXEditorProps extends MDXEditorProps {
+	editorRef: ForwardedRef<MDXEditorMethods> | null;
 }
 
-const InitializedMDXEditor = forwardRef<
-  MDXEditorMethods,
-  InitializedMDXEditorProps
->(({ markdown, onChange = () => {} }, ref) => {
-  return (
-    <div>
-      <MDXEditor
-        ref={ref}
-        contentEditableClassName="prose"
-        markdown={markdown}
-        onChange={onChange}
-        plugins={[
-          headingsPlugin(),
-          listsPlugin(),
-          quotePlugin(),
-          thematicBreakPlugin(),
-          markdownShortcutPlugin(),
-          codeBlockPlugin({ defaultCodeBlockLanguage: "js" }),
-          sandpackPlugin({ sandpackConfig: simpleSandpackConfig }),
-          codeMirrorPlugin({
-            codeBlockLanguages: { js: "JavaScript", css: "CSS" },
-          }),
-          toolbarPlugin({
-            toolbarContents: () => (
-              <ConditionalContents
-                options={[
-                  {
-                    when: (editor) => editor?.editorType === "codeblock",
-                    contents: () => <ChangeCodeMirrorLanguage />,
-                  },
-                  {
-                    when: (editor) => editor?.editorType === "sandpack",
-                    contents: () => <ShowSandpackInfo />,
-                  },
-                  {
-                    fallback: () => (
-                      <>
-                        <UndoRedo />
-                        <BoldItalicUnderlineToggles />
-                        <BlockTypeSelect />
-                        <CodeToggle />
-                        <InsertThematicBreak />
-                        <InsertCodeBlock />
-                        <InsertSandpack />
-                      </>
-                    ),
-                  },
-                ]}
-              />
-            ),
-          }),
-        ]}
-      />
-    </div>
-  );
-});
+const InitializedMDXEditor = ({
+	editorRef,
+	...props
+}: InitializedMDXEditorProps) => {
+	return (
+		<div>
+			<MDXEditor
+				{...props}
+				ref={editorRef}
+				contentEditableClassName="prose"
+				plugins={[
+					headingsPlugin(),
+					listsPlugin(),
+					quotePlugin(),
+					thematicBreakPlugin(),
+					markdownShortcutPlugin(),
+					codeBlockPlugin({ defaultCodeBlockLanguage: "js" }),
+					sandpackPlugin({ sandpackConfig: simpleSandpackConfig }),
+					codeMirrorPlugin({
+						codeBlockLanguages: { js: "JavaScript", css: "CSS" },
+					}),
+					toolbarPlugin({
+						toolbarContents: () => (
+							<ConditionalContents
+								options={[
+									{
+										when: (editor) =>
+											editor?.editorType === "codeblock",
+										contents: () => (
+											<ChangeCodeMirrorLanguage />
+										),
+									},
+									{
+										when: (editor) =>
+											editor?.editorType === "sandpack",
+										contents: () => <ShowSandpackInfo />,
+									},
+									{
+										fallback: () => (
+											<>
+												<UndoRedo />
+												<BoldItalicUnderlineToggles />
+												<BlockTypeSelect />
+												<CodeToggle />
+												<InsertThematicBreak />
+												<InsertCodeBlock />
+												<InsertSandpack />
+											</>
+										),
+									},
+								]}
+							/>
+						),
+					}),
+				]}
+			/>
+		</div>
+	);
+};
 
 InitializedMDXEditor.displayName = "InitializedMDXEditor";
 
