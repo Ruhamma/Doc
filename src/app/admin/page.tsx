@@ -1,15 +1,22 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Box } from "@mantine/core";
 import Navbar from "./component/Navbar";
 import Sidebar from "./component/side_bar";
 import MdxEditor from "./component/mdxeditor/mdxEditor";
 import { Node } from "@/types/treeNode";
+import { MDXEditorMethods } from "@mdxeditor/editor";
 
 export default function Admin() {
-  const [activeContent, setActiveContent] = useState("");
+  const [activeContent, setActiveContent] = useState<string>("");
+  const ref = useRef<MDXEditorMethods>(null);
 
   const handleNodeClick = (node: Node) => {
+    if (ref.current) {
+      const currentMarkdown = ref.current.getMarkdown();
+      console.log("Current Markdown:", currentMarkdown);
+      ref.current.setMarkdown(node.content || "");
+    }
     setActiveContent(node.content || "");
   };
 
@@ -27,7 +34,11 @@ export default function Admin() {
           <Sidebar onNodeClick={handleNodeClick} />
         </Box>
         <Box className="editor flex-grow">
-          <MdxEditor markdown={activeContent} onChange={handleEditorChange} />
+          <MdxEditor
+            ref={ref}
+            markdown={activeContent}
+            onChange={handleEditorChange}
+          />
         </Box>
       </Box>
     </Box>

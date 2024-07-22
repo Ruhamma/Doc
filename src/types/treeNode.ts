@@ -1,9 +1,8 @@
-// types/treeNode.ts
 export interface Node {
   id: string;
   title: string;
-  subtitles: Node[];
   content?: string;
+  subtitles: Node[];
 }
 
 export interface TreeNodeProps {
