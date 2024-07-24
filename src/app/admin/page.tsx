@@ -1,13 +1,16 @@
 "use client";
 import { useRef, useState } from "react";
-import { Box, Button } from "@mantine/core";
+import { Box, Button, Flex } from "@mantine/core";
 import Navbar from "./component/Navbar";
 import Sidebar from "./component/side_bar";
 import { Node } from "@/types/treeNode";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { ForwardRefEditor } from "./component/mdxeditor/ForwardRefEditor";
+import Update from "./component/update";
+import { useRouter } from "next/navigation";
 
 export default function Admin() {
+  const router = useRouter();
   const [activeContent, setActiveContent] = useState<string>("");
   const ref = useRef<MDXEditorMethods>(null);
 
@@ -19,6 +22,8 @@ export default function Admin() {
       ref.current.setMarkdown(`# ${node.title}`);
     }
     setActiveContent(node.content || "");
+    const path = `/admin/subtitle/${node.title}`;
+    router.push(path);
   };
 
   const handleEditorChange = (newContent: string) => {
@@ -31,9 +36,9 @@ export default function Admin() {
         <Navbar />
       </Box>
       <Box className="flex flex-row h-full pt-16">
-        <Box className="sidebar w-1/5 bg-gray-200 h-full overflow-hidden">
-          <Sidebar onNodeClick={handleNodeClick} />
-        </Box>
+        <Sidebar onNodeClick={handleNodeClick} />
+
+        {/* <Update /> */}
         <Box className="editor flex-grow overflow-hidden relative">
           <Box className="editor-content h-full overflow-y-auto">
             <ForwardRefEditor
@@ -41,13 +46,15 @@ export default function Admin() {
               markdown={activeContent}
               onChange={handleEditorChange}
             />
-
-            {/* <Button
-              variant="outline"
-              onClick={() => console.log(ref.current?.getMarkdown())}
-            >
-              Create
-            </Button> */}
+            {/* <Flex>
+              <Button
+                className="fixed bottom-4  bg-green-500 text-white px-8 py-2 rounded shadow-md hover:bg-green-600"
+                variant="outline"
+                onClick={() => console.log(ref.current?.getMarkdown())}
+              >
+                Create Doc
+              </Button>
+            </Flex> */}
           </Box>
         </Box>
       </Box>
