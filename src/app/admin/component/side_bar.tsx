@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Modal, TextInput, Group, Stack, Flex } from "@mantine/core";
+import { Button, TextInput, Stack, Flex } from "@mantine/core";
 import { nanoid } from "nanoid";
 import { SidebarProps, TreeNodeProps, Node } from "@/types/treeNode";
 
@@ -20,35 +20,19 @@ const TreeNode = ({ node, onNodeClick }: TreeNodeProps) => (
 
 const SideBar = ({ onNodeClick }: SidebarProps) => {
   const [nodes, setNodes] = useState<Node[]>([]);
-  const [opened, setOpened] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newSubtitles, setNewSubtitles] = useState<string[]>([""]);
-
-  const handleAddTitle = () => {
-    setOpened(true);
-  };
-
-  const handleModalSubmit = () => {
-    const newNode: Node = {
-      id: nanoid(),
-      title: newTitle,
-      content: "",
-      subtitles: newSubtitles.map((subtitle) => ({
-        id: nanoid(),
-        title: subtitle,
-        content: "",
-        subtitles: [],
-      })),
-    };
-
-    setNodes([...nodes, newNode]);
-    setNewTitle("");
-    setNewSubtitles([""]);
-    setOpened(false);
-  };
+  const [isTitleSet, setIsTitleSet] = useState(false);
+  const [areSubtitlesSet, setAreSubtitlesSet] = useState<boolean[]>([]);
 
   const handleAddSubtitleField = () => {
-    setNewSubtitles([...newSubtitles, ""]);
+    if (!isTitleSet && newTitle.trim() !== "") {
+      setIsTitleSet(true);
+    }
+    if (newSubtitles.every((subtitle) => subtitle.trim() !== "")) {
+      setAreSubtitlesSet([...areSubtitlesSet, true]);
+      setNewSubtitles([...newSubtitles, ""]);
+    }
   };
 
   const handleSubtitleChange = (index: number, value: string) => {
@@ -58,21 +42,11 @@ const SideBar = ({ onNodeClick }: SidebarProps) => {
   };
 
   return (
-    <div className="sidebar p-6 ">
-      <Button color="green" onClick={handleAddTitle}>
-        Add Title
-      </Button>
-      {nodes.map((node) => (
-        <TreeNode key={node.id} node={node} onNodeClick={onNodeClick} />
-      ))}
-      <Modal
-        opened={opened}
-        onClose={() => setOpened(false)}
-        title="Add Title and Subtitles"
-      >
-        <Flex direction={"column"} gap={"md"}>
+    <div className="sidebar p-6">
+      <Flex direction={"column"} gap={"md"}>
+        {!isTitleSet ? (
           <TextInput
-            label="Title"
+            placeholder="Title"
             value={newTitle}
             onChange={(event) => setNewTitle(event.currentTarget.value)}
             variant="filled"
@@ -80,31 +54,49 @@ const SideBar = ({ onNodeClick }: SidebarProps) => {
               input: { border: "1px solid green", borderRadius: "4px" },
             }}
           />
-          {newSubtitles.map((subtitle, index) => (
+        ) : (
+          <Button variant="subtle" color="green">
+            {newTitle}
+          </Button>
+        )}
+        {newSubtitles.map((subtitle, index) =>
+          areSubtitlesSet[index] ? (
+            <Button
+              key={index}
+              variant="subtle"
+              color="green"
+              style={{ marginLeft: "20px" }}
+            >
+              {subtitle}
+            </Button>
+          ) : (
             <TextInput
               key={index}
-              label={`Subtitle ${index + 1}`}
+              placeholder={`Subtitle ${index + 1}`}
               value={subtitle}
               onChange={(event) =>
                 handleSubtitleChange(index, event.currentTarget.value)
               }
               variant="filled"
               styles={{
-                input: { border: "1px solid green", borderRadius: "4px" },
+                input: {
+                  border: "1px solid green",
+                  borderRadius: "4px",
+                  marginLeft: "20px",
+                },
               }}
             />
-          ))}
-          <Stack>
-            <Button color="green" onClick={handleAddSubtitleField}>
-              Add Subtitle
-            </Button>
-
-            <Button color="green" onClick={handleModalSubmit}>
-              Submit
-            </Button>
-          </Stack>
-        </Flex>
-      </Modal>
+          )
+        )}
+        <Stack>
+          <Button color="green" onClick={handleAddSubtitleField}>
+            Add Subtitle
+          </Button>
+        </Stack>
+      </Flex>
+      {nodes.map((node) => (
+        <TreeNode key={node.id} node={node} onNodeClick={onNodeClick} />
+      ))}
     </div>
   );
 };
