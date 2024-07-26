@@ -74,6 +74,9 @@ const TopicsSideBar = ({ topics, onNodeClick }: TopicsSideBarProps) => {
 
   return (
     <div className="sidebar p-6">
+      {treeContent.map((node) => (
+        <TreeNode key={node.id} node={node} onNodeClick={onNodeClick} />
+      ))}
       <Flex direction={"column"} gap={"md"}>
         {!isTitleSet ? (
           <TextInput
@@ -128,9 +131,6 @@ const TopicsSideBar = ({ topics, onNodeClick }: TopicsSideBarProps) => {
           </Button>
         </Stack>
       </Flex>
-      {treeContent.map((node) => (
-        <TreeNode key={node.id} node={node} onNodeClick={onNodeClick} />
-      ))}
     </div>
   );
 };
