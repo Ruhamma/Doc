@@ -5,10 +5,9 @@ import Navbar from "./component/Navbar";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { ForwardRefEditor } from "./component/mdxeditor/ForwardRefEditor";
 import { useRouter } from "next/navigation";
-import TopicsSideBar from "./component/components/TopicsSideBar";
+import TopicsSideBar from "./component/tree/TopicsSideBar";
 import { Topic } from "@/types/topic";
 
-// Sample data for topics and subtopics
 const data: Topic[] = [
   { id: "1", name: "Getting Started", content: "", parentId: null },
   { id: "2", name: "DataSource", content: "", parentId: null },

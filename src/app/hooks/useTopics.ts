@@ -4,7 +4,7 @@ export const useTopic = () => {
   const { data, error, isLoading } = useGetTopicsQuery();
 
   return {
-    employee: data,
+    topics: data,
     error,
     isLoading,
   };
