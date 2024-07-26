@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import { Box, Button, Flex } from "@mantine/core";
 import Navbar from "./component/Navbar";
-import Sidebar from "./component/side_bar";
+import Sidebar from "./component/updateSide_bar";
 import { Node } from "@/types/treeNode";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { ForwardRefEditor } from "./component/mdxeditor/ForwardRefEditor";
