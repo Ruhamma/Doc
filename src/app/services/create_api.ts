@@ -22,13 +22,7 @@ export const createDocApi = createApi({
         body: newTopic,
       }),
     }),
-    createNewSubtopic: builder.mutation<Topic, NewSubtopicBody>({
-      query: (newSubTopic: NewSubtopicBody) => ({
-        url: `/categories/subcategories`,
-        method: "POST",
-        body: newSubTopic,
-      }),
-    }),
+
     updateDoc: builder.mutation<Topic, UpdateDoc>({
       query: (id) => ({
         url: `/categories/${id}`,
@@ -36,10 +30,9 @@ export const createDocApi = createApi({
       }),
     }),
     getTopics: builder.query<Topic[], void>({
-      query: (topics) => ({
+      query: () => ({
         url: `/categories`,
         method: "GET",
-        body: topics,
       }),
     }),
     deleteTopic: builder.mutation<{ success: boolean; id: string }, string>({
@@ -52,7 +45,7 @@ export const createDocApi = createApi({
 });
 export const {
   useCreateTopicMutation,
-  useCreateNewSubtopicMutation,
+
   useUpdateDocMutation,
   useGetTopicsQuery,
   useDeleteTopicMutation,
