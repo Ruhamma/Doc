@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ActionIcon, Button } from "@mantine/core";
 import { Topic } from "@/types/topic";
-import { IconTrash } from "@tabler/icons-react";
+import { IconPlus, IconTrash } from "@tabler/icons-react";
 
 interface TreeNodeProps {
   node: Topic;
@@ -33,11 +33,11 @@ const TreeNode = ({ node, onNodeClick }: TreeNodeProps) => {
         {isHovered && (
           <ActionIcon
             variant="subtle"
-            color="red"
+            color="green"
             className="absolute "
             onClick={() => onDeleteNode(node.id)}
           >
-            <IconTrash size={16} stroke={1.5} />
+            <IconPlus size={16} stroke={1.5} />
           </ActionIcon>
         )}
       </div>
