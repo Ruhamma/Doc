@@ -1,20 +1,26 @@
 import React, { useState } from "react";
-import { ActionIcon, Button } from "@mantine/core";
+import { ActionIcon, Button, Modal, TextInput } from "@mantine/core";
 import { Topic } from "@/types/topic";
-import { IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconPlus } from "@tabler/icons-react";
 
 interface TreeNodeProps {
   node: Topic;
   onNodeClick: (node: Topic) => void;
-  onDeleteNode: (nodeId: string) => void;
+  onAddSubTopic: (parentId: string, subTopicName: string) => void;
 }
 
-const TreeNode = ({ node, onNodeClick }: TreeNodeProps) => {
+const TreeNode = ({ node, onNodeClick, onAddSubTopic }: TreeNodeProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [subTopicName, setSubTopicName] = useState("");
 
-  function onDeleteNode(id: string): void {
-    throw new Error("Function not implemented.");
-  }
+  const handleAddSubTopic = () => {
+    if (subTopicName.trim() !== "") {
+      onAddSubTopic(node.id, subTopicName);
+      setSubTopicName("");
+      setIsModalOpen(false);
+    }
+  };
 
   return (
     <div
@@ -33,24 +39,38 @@ const TreeNode = ({ node, onNodeClick }: TreeNodeProps) => {
         {isHovered && (
           <ActionIcon
             variant="subtle"
-            color="green"
+            color="blue"
             className="absolute "
-            onClick={() => onDeleteNode(node.id)}
+            onClick={() => setIsModalOpen(true)}
           >
             <IconPlus size={16} stroke={1.5} />
           </ActionIcon>
         )}
       </div>
-      <div>
+      <div className="ml-4">
         {node.subTopics?.map((subTopic) => (
           <TreeNode
             key={subTopic.id}
             node={subTopic}
             onNodeClick={onNodeClick}
-            onDeleteNode={onDeleteNode}
+            onAddSubTopic={onAddSubTopic}
           />
         ))}
       </div>
+      <Modal
+        opened={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Add SubTopic"
+      >
+        <TextInput
+          placeholder="SubTopic Name"
+          value={subTopicName}
+          onChange={(event) => setSubTopicName(event.currentTarget.value)}
+        />
+        <Button onClick={handleAddSubTopic} color="green" mt="md">
+          Add
+        </Button>
+      </Modal>
     </div>
   );
 };

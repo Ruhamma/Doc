@@ -1,19 +1,30 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Box, Button, Flex, Loader } from "@mantine/core";
 import Navbar from "./component/Navbar";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { ForwardRefEditor } from "./component/mdxeditor/ForwardRefEditor";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import TopicsSideBar from "./component/tree/TopicsSideBar";
 import { Topic } from "@/types/topic";
 import { useGetTopicsQuery } from "../services/create_api";
 
 export default function Admin() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [activeContent, setActiveContent] = useState<string>("");
   const ref = useRef<MDXEditorMethods>(null);
   const { data: topics, error, isLoading } = useGetTopicsQuery();
+  useEffect(() => {
+    const nodeId = searchParams.get("id");
+    if (nodeId && topics) {
+      const node = findNodeById(topics, nodeId);
+      if (node && ref.current) {
+        ref.current.setMarkdown(node.content || "");
+        setActiveContent(node.content || "");
+      }
+    }
+  }, [searchParams, topics]);
 
   if (isLoading) {
     return <Loader size={30} />;
@@ -24,19 +35,26 @@ export default function Admin() {
   }
 
   const handleNodeClick = (node: Topic) => {
-    console.log(ref);
-    if (ref.current) {
-      const currentMarkdown = ref.current.getMarkdown();
-      console.log("Current Markdown:", currentMarkdown);
-      ref.current.setMarkdown(`# ${node.name}`);
-    }
-    setActiveContent(node.content || "");
-    const path = `/admin/subtitle/${node.name}`;
+    const path = `/admin?id=${node.id}`;
     router.push(path);
   };
-
   const handleEditorChange = (newContent: string) => {
     setActiveContent(newContent);
+  };
+
+  const findNodeById = (nodes: Topic[], id: string): Topic | null => {
+    for (let node of nodes) {
+      if (node.id === id) {
+        return node;
+      }
+      if (node.subTopics) {
+        const foundNode = findNodeById(node.subTopics, id);
+        if (foundNode) {
+          return foundNode;
+        }
+      }
+    }
+    return null;
   };
 
   return (
@@ -45,7 +63,7 @@ export default function Admin() {
         <Navbar />
       </Box>
       <Box className="flex flex-row h-full pt-16">
-        <TopicsSideBar topics={data} onNodeClick={handleNodeClick} />
+        <TopicsSideBar topics={topics ?? []} onNodeClick={handleNodeClick} />
         <Box className="editor flex-grow overflow-hidden relative">
           <Box className="editor-content h-full overflow-y-auto">
             <ForwardRefEditor
