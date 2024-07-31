@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Box, Button, Flex, Loader } from "@mantine/core";
+import { Box, Button, Flex, Loader, Skeleton } from "@mantine/core";
 import Navbar from "./component/Navbar";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { ForwardRefEditor } from "./component/mdxeditor/ForwardRefEditor";
@@ -8,6 +8,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import TopicsSideBar from "./component/tree/TopicsSideBar";
 import { Topic } from "@/types/topic";
 import { useGetTopicsQuery } from "../services/create_api";
+import SkeletonLayout from "./component/skeleton";
+import { IconDeviceFloppy, IconDownload, IconTrash } from "@tabler/icons-react";
 
 export default function Admin() {
   const router = useRouter();
@@ -27,7 +29,11 @@ export default function Admin() {
   }, [searchParams, topics]);
 
   if (isLoading) {
-    return <Loader size={30} />;
+    return (
+      <>
+        <SkeletonLayout />
+      </>
+    );
   }
 
   if (error) {
@@ -71,17 +77,28 @@ export default function Admin() {
               markdown={activeContent}
               onChange={handleEditorChange}
             />
-            {/* <Flex>
-              <Button
-                className="fixed bottom-4  bg-green-500 text-white px-8 py-2 rounded shadow-md hover:bg-green-600"
-                variant="outline"
-                onClick={() => console.log(ref.current?.getMarkdown())}
-              >
-                Create Doc
-              </Button>
-            </Flex> */}
           </Box>
         </Box>
+      </Box>
+      <Box className="fixed right-4 bottom-4 flex space-x-4 p-10">
+        <Button
+          className=" text-white px-4 py-2 rounded shadow-md hover:bg-green-600"
+          variant="filled"
+          color="gray"
+          onClick={() => console.log(ref.current?.getMarkdown())}
+        >
+          <IconDownload size={20} />
+          Save
+        </Button>
+        <Button
+          className="text-white px-4 py-2 rounded shadow-md hover:bg-blue-600"
+          variant="outline"
+          color="red"
+          onClick={() => console.log("Secondary Action")}
+        >
+          <IconTrash size={20} />
+          Delete
+        </Button>
       </Box>
     </Box>
   );

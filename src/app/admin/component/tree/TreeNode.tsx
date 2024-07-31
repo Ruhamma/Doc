@@ -24,29 +24,27 @@ const TreeNode = ({ node, onNodeClick, onAddSubTopic }: TreeNodeProps) => {
 
   return (
     <div
-      className="ml-4 mt-2"
+      className="ml-4 mt-2 relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div>
-        <Button
-          variant="subtle"
-          color="green"
-          onClick={() => onNodeClick(node)}
-        >
+        <Button variant="subtle" color="gray" onClick={() => onNodeClick(node)}>
           {node.name}
         </Button>
         {isHovered && (
           <ActionIcon
+            key={node.id}
             variant="subtle"
-            color="blue"
-            className="absolute "
+            color="green"
+            className="absolute right-0 top-0"
             onClick={() => setIsModalOpen(true)}
           >
             <IconPlus size={16} stroke={1.5} />
           </ActionIcon>
         )}
       </div>
+
       <div className="ml-4">
         {node.subTopics?.map((subTopic) => (
           <TreeNode
@@ -57,6 +55,7 @@ const TreeNode = ({ node, onNodeClick, onAddSubTopic }: TreeNodeProps) => {
           />
         ))}
       </div>
+
       <Modal
         opened={isModalOpen}
         onClose={() => setIsModalOpen(false)}
