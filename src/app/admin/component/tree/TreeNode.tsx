@@ -9,7 +9,11 @@ interface TreeNodeProps {
   onAddSubTopic: (parentId: string, subTopicName: string) => void;
 }
 
-const TreeNode = ({ node, onNodeClick, onAddSubTopic }: TreeNodeProps) => {
+export const TreeNode = ({
+  node,
+  onNodeClick,
+  onAddSubTopic,
+}: TreeNodeProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [subTopicName, setSubTopicName] = useState("");
@@ -62,7 +66,7 @@ const TreeNode = ({ node, onNodeClick, onAddSubTopic }: TreeNodeProps) => {
         title="Add SubTopic"
       >
         <TextInput
-          placeholder="SubTopic Name"
+          placeholder="Topic Name"
           value={subTopicName}
           onChange={(event) => setSubTopicName(event.currentTarget.value)}
         />

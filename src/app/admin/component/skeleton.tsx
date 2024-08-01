@@ -1,8 +1,12 @@
-import { Skeleton } from "@mantine/core";
+import { Box, Skeleton } from "@mantine/core";
+import Navbar from "./Navbar";
 
 function SkeletonLayout() {
   return (
-    <div className="flex h-screen">
+    <div className="flex flex-col w-full h-screen">
+      <Box className="navbar fixed w-full bg-gray-300 h-16 z-10">
+        <Navbar />
+      </Box>
       <div className="w-1/4 p-4 bg-gray-100">
         <Skeleton height={8} radius="xl" />
         <Skeleton height={8} mt={6} radius="xl" />

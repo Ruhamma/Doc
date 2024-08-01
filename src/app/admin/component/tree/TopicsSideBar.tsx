@@ -70,6 +70,7 @@ const TopicsSideBar = ({ topics, onNodeClick }: TopicsSideBarProps) => {
           variant="filled"
           size="sm"
           color="gray"
+          onClick={() => setIsModalOpen(true)}
         >
           Add Topic
         </Button>
