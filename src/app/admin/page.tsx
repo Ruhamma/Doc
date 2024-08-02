@@ -1,6 +1,14 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Box, Button, Flex, Modal, Text, Group } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Flex,
+  Modal,
+  Text,
+  Group,
+  Notification,
+} from "@mantine/core";
 import Navbar from "./component/Navbar";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { ForwardRefEditor } from "./component/mdxeditor/ForwardRefEditor";
@@ -15,12 +23,17 @@ import {
 import SkeletonLayout from "./component/skeleton";
 import { IconDownload, IconTrash } from "@tabler/icons-react";
 
+type NotificationType =
+  | { type: "error"; message: string }
+  | { type: "info"; message: string };
+
 export default function Admin() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeContent, setActiveContent] = useState<string>("");
   const [activeTopic, setActiveTopic] = useState<Topic | null>(null);
   const [deleteModalOpened, setDeleteModalOpened] = useState<boolean>(false);
+  const [notifications, setNotifications] = useState<NotificationType[]>([]);
   const ref = useRef<MDXEditorMethods>(null);
 
   const { data: topics, error, isLoading } = useGetTopicsQuery();
@@ -41,12 +54,35 @@ export default function Admin() {
     }
   }, [searchParams, topics]);
 
+  useEffect(() => {
+    if (updateError) {
+      setNotifications((prev) => [
+        ...prev,
+        { type: "error", message: `Update error: ${updateError.toString()}` },
+      ]);
+    }
+  }, [updateError]);
+
+  useEffect(() => {
+    if (deleteError) {
+      setNotifications((prev) => [
+        ...prev,
+        { type: "error", message: `Delete error: ${deleteError.toString()}` },
+      ]);
+    }
+  }, [deleteError]);
+
+  useEffect(() => {
+    if (error) {
+      setNotifications((prev) => [
+        ...prev,
+        { type: "error", message: `Data fetch error: ${error.toString()}` },
+      ]);
+    }
+  }, [error]);
+
   if (isLoading) {
     return <SkeletonLayout />;
-  }
-
-  if (error) {
-    return <Flex>{error.toString()}</Flex>;
   }
 
   const handleNodeClick = (topicNode: Topic) => {
@@ -81,13 +117,20 @@ export default function Admin() {
       updateDoc({
         id: activeTopic.id,
         content: markdownContent,
-        name: "",
+        name: activeTopic.name,
       })
-        .then((response) => {
-          console.log("Update response:", response);
+        .then(() => {
+          setNotifications((prev) => [
+            ...prev,
+            { type: "info", message: "Content updated successfully" },
+          ]);
         })
         .catch((err) => {
           console.error("Update error:", err);
+          setNotifications((prev) => [
+            ...prev,
+            { type: "error", message: `Update error: ${err.toString()}` },
+          ]);
         });
     } else {
       console.log("No topic selected to update.");
@@ -101,12 +144,19 @@ export default function Admin() {
   const confirmDelete = () => {
     if (activeTopic) {
       deleteTopic(activeTopic.id)
-        .then((response) => {
-          console.log("Delete response:", response);
+        .then(() => {
+          setNotifications((prev) => [
+            ...prev,
+            { type: "info", message: "Topic deleted successfully" },
+          ]);
           router.push("/admin"); // Redirect after deletion
         })
         .catch((err) => {
           console.error("Delete error:", err);
+          setNotifications((prev) => [
+            ...prev,
+            { type: "error", message: `Delete error: ${err.toString()}` },
+          ]);
         })
         .finally(() => {
           setDeleteModalOpened(false); // Close the modal after action
@@ -177,17 +227,19 @@ export default function Admin() {
         </Group>
       </Modal>
 
-      {updateError && (
-        <Flex className="fixed right-4 bottom-20 text-red-500">
-          {updateError.toString()}
-        </Flex>
-      )}
-
-      {deleteError && (
-        <Flex className="fixed right-4 bottom-28 text-red-500">
-          {deleteError.toString()}
-        </Flex>
-      )}
+      {notifications.map((notification, index) => (
+        <Notification
+          key={index}
+          color={notification.type === "error" ? "red" : "green"}
+          title={notification.type === "error" ? "Error" : "Success"}
+          onClose={() =>
+            setNotifications((prev) => prev.filter((_, i) => i !== index))
+          }
+          className="fixed right-4 bottom-4"
+        >
+          {notification.message}
+        </Notification>
+      ))}
     </Box>
   );
 }

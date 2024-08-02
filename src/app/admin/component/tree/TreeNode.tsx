@@ -32,8 +32,13 @@ export const TreeNode = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div>
-        <Button variant="subtle" color="gray" onClick={() => onNodeClick(node)}>
+      <div items-center>
+        <Button
+          className="truncate max-w-[calc(100%-32px)] text-left"
+          variant="subtle"
+          color="gray"
+          onClick={() => onNodeClick(node)}
+        >
           {node.name}
         </Button>
         {isHovered && (
