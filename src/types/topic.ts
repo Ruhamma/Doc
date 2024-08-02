@@ -30,4 +30,8 @@ export interface Topic {
   subTopics?: Topic[];
 }
 
+export interface UpdateDoc {
+  id: string;
+  content: string;
+}
 export type TopicsResponse = Topic[];

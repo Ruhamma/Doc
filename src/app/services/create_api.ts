@@ -24,9 +24,10 @@ export const createDocApi = createApi({
     }),
 
     updateDoc: builder.mutation<Topic, UpdateDoc>({
-      query: (id) => ({
-        url: `/categories/${id}`,
+      query: (updateDoc: UpdateDoc) => ({
+        url: `/categories/${updateDoc.id}`,
         method: "PUT",
+        body: { content: updateDoc.content },
       }),
     }),
     getTopics: builder.query<Topic[], void>({
