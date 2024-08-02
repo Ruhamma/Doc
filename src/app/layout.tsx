@@ -6,6 +6,7 @@ import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Providers } from "@/store/provider";
 import { ThemeProviders } from "./ThemeProviders";
 import "@mdxeditor/editor/style.css";
+import "@mdxeditor/editor/style.css";
 const inter = Inter({ subsets: ["latin"] });
 const raleway = Raleway({ subsets: ["latin"] });
 const openSans = Open_Sans({ subsets: ["latin"] });
