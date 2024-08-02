@@ -1,12 +1,24 @@
 "use client";
-import { Button, Flex, Group, Stack, Text } from "@mantine/core";
+import { Button, Flex, Group, Stack } from "@mantine/core";
+("use client");
+import { Button, Flex, Group, Stack } from "@mantine/core";
 import Image from "next/image";
 import Header from "./tests/Components/Header";
 import Link from "next/link";
+import Header from "./_component/header";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
+
+  const handleSecondaryButtonClick = () => {
+    router.push("/admin");
+  };
+
+  const handleSecondaryButtonClick = () => {
+    router.push("/admin");
+  };
+
   return (
     <main className="">
       <Header />
@@ -19,8 +31,8 @@ export default function Home() {
       >
         <Group className="w-1/2">
           <Stack align="stretch" justify="center" gap="xl">
-            <p className="text-5xl font-extrabold text-[#404040] dark:text-[#d3cccc] open-sans">
-              Lets Get Started With PISDOC
+            <p className="text-5xl font-extrabold text-[#404040] open-sans">
+              Let''s Get Started With PISDOC
             </p>
             <p className="text-xl text-[#404040] dark:text-[#a3a0a0]">
               Welcome to the official documentation site for [Your Company]'s
@@ -45,6 +57,8 @@ export default function Home() {
               className="shadow-xl px-10"
               size="lg"
               color="#595959"
+              onClick={handleSecondaryButtonClick} // Call the new handler here
+              onClick={handleSecondaryButtonClick} // Call the new handler here
             >
               Secondary
             </Button>
