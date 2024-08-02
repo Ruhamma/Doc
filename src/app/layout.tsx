@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Inter,Raleway,Open_Sans } from "next/font/google";
+import { Inter, Raleway, Open_Sans } from "next/font/google";
 import "./globals.css";
 import "@mantine/core/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Providers } from "@/store/provider";
+import { ThemeProviders } from "./ThemeProviders";
 
 const inter = Inter({ subsets: ["latin"] });
 const raleway = Raleway({ subsets: ["latin"] });
@@ -19,16 +20,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <ColorSchemeScript />
       </head>
       <body
-        className={`${inter.className} ${raleway.className} ${openSans.className}`}
+        className={`${inter.className} ${raleway.className} ${openSans.className} dark:bg-[#112018] dark:text-gray-300`}
       >
-        <Providers>
-          <MantineProvider>{children}</MantineProvider>
-        </Providers>
+        <ThemeProviders>
+          <Providers>
+            <MantineProvider>{children}</MantineProvider>
+          </Providers>
+        </ThemeProviders>
       </body>
     </html>
   );
