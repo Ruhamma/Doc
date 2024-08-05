@@ -1,19 +1,14 @@
 "use client";
 import { Button, Flex, Group, Stack } from "@mantine/core";
-("use client");
-import { Button, Flex, Group, Stack } from "@mantine/core";
+
 import Image from "next/image";
 import Header from "./tests/Components/Header";
 import Link from "next/link";
-import Header from "./_component/header";
+
 import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
-
-  const handleSecondaryButtonClick = () => {
-    router.push("/admin");
-  };
 
   const handleSecondaryButtonClick = () => {
     router.push("/admin");
@@ -57,8 +52,7 @@ export default function Home() {
               className="shadow-xl px-10"
               size="lg"
               color="#595959"
-              onClick={handleSecondaryButtonClick} // Call the new handler here
-              onClick={handleSecondaryButtonClick} // Call the new handler here
+              onClick={handleSecondaryButtonClick}
             >
               Secondary
             </Button>
