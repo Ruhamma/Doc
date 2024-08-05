@@ -22,6 +22,7 @@ import {
 } from "../services/create_api";
 import SkeletonLayout from "./component/skeleton";
 import { IconDownload, IconTrash } from "@tabler/icons-react";
+import Header from "../tests/Components/Header";
 
 type NotificationType =
   | { type: "error"; message: string }
@@ -113,7 +114,6 @@ export default function Admin() {
     if (activeTopic) {
       const markdownContent = ref.current?.getMarkdown() || "";
 
-      // Update content of the current topic
       updateDoc({
         id: activeTopic.id,
         content: markdownContent,
@@ -138,7 +138,7 @@ export default function Admin() {
   };
 
   const handleDeleteClick = () => {
-    setDeleteModalOpened(true); // Open the confirmation modal
+    setDeleteModalOpened(true);
   };
 
   const confirmDelete = () => {
@@ -149,7 +149,7 @@ export default function Admin() {
             ...prev,
             { type: "info", message: "Topic deleted successfully" },
           ]);
-          router.push("/admin"); // Redirect after deletion
+          router.push("/admin");
         })
         .catch((err) => {
           console.error("Delete error:", err);
@@ -159,7 +159,7 @@ export default function Admin() {
           ]);
         })
         .finally(() => {
-          setDeleteModalOpened(false); // Close the modal after action
+          setDeleteModalOpened(false);
         });
     }
   };
@@ -167,7 +167,7 @@ export default function Admin() {
   return (
     <Box className="flex flex-col w-full h-screen">
       <Box className="navbar fixed w-full bg-gray-300 h-16 z-10">
-        <Navbar />
+        <Header />
       </Box>
       <Box className="flex flex-row h-full pt-16">
         <TopicsSideBar topics={topics ?? []} onNodeClick={handleNodeClick} />
@@ -187,7 +187,7 @@ export default function Admin() {
           variant="filled"
           color="gray"
           onClick={handleSaveClick}
-          disabled={isUpdating} // Disable button while updating
+          disabled={isUpdating}
         >
           <IconDownload size={20} />
           Save
@@ -197,7 +197,7 @@ export default function Admin() {
           variant="outline"
           color="red"
           onClick={handleDeleteClick}
-          disabled={isDeleting} // Disable button while deleting
+          disabled={isDeleting}
         >
           <IconTrash size={20} />
           Delete
