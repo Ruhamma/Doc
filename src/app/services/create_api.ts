@@ -42,6 +42,16 @@ export const createDocApi = createApi({
         method: "DELETE",
       }),
     }),
+    login: builder.mutation<
+      { token: string },
+      { userName: string; password: string }
+    >({
+      query: (credentials) => ({
+        url: `/auth/login`,
+        method: "POST",
+        body: credentials,
+      }),
+    }),
   }),
 });
 export const {
@@ -50,4 +60,5 @@ export const {
   useUpdateDocMutation,
   useGetTopicsQuery,
   useDeleteTopicMutation,
+  useLoginMutation,
 } = createDocApi;

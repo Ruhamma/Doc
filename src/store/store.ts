@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import { createDocApi } from "@/app/services/create_api";
 import { api } from "./api";
+import { createDocApi } from "@/app/services/create_api";
 
 const store = configureStore({
   reducer: {

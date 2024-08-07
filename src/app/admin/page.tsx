@@ -11,18 +11,21 @@ import {
 } from "@mantine/core";
 import Navbar from "./component/Navbar";
 import { MDXEditorMethods } from "@mdxeditor/editor";
-import { ForwardRefEditor } from "./component/mdxeditor/ForwardRefEditor";
+
 import { useRouter, useSearchParams } from "next/navigation";
-import TopicsSideBar from "./component/tree/TopicsSideBar";
+
 import { Topic } from "@/types/topic";
-import {
-  useGetTopicsQuery,
-  useUpdateDocMutation,
-  useDeleteTopicMutation,
-} from "../services/create_api";
+
 import SkeletonLayout from "./component/skeleton";
 import { IconDownload, IconTrash } from "@tabler/icons-react";
 import Header from "../tests/Components/Header";
+import TopicsSideBar from "./component/tree/TopicsSideBar";
+import {
+  useDeleteTopicMutation,
+  useGetTopicsQuery,
+  useUpdateDocMutation,
+} from "../services/create_api";
+import { ForwardRefEditor } from "./component/mdxeditor/ForwardRefEditor";
 
 type NotificationType =
   | { type: "error"; message: string }
