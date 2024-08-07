@@ -1,30 +1,20 @@
 import React, { useState } from "react";
-import { ActionIcon, Button, Modal, TextInput } from "@mantine/core";
+import { ActionIcon, Button } from "@mantine/core";
 import { Topic } from "@/types/topic";
 import { IconPlus } from "@tabler/icons-react";
 
 interface TreeNodeProps {
   node: Topic;
   onNodeClick: (node: Topic) => void;
-  onAddSubTopic: (parentId: string, subTopicName: string) => void;
+  onAddSubTopicClick: (parentId: string) => void; // Update prop name
 }
 
 export const TreeNode = ({
   node,
   onNodeClick,
-  onAddSubTopic,
+  onAddSubTopicClick,
 }: TreeNodeProps) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [subTopicName, setSubTopicName] = useState("");
-
-  const handleAddSubTopic = () => {
-    if (subTopicName.trim() !== "") {
-      onAddSubTopic(node.id, subTopicName);
-      setSubTopicName("");
-      setIsModalOpen(false);
-    }
-  };
 
   return (
     <div
@@ -47,7 +37,7 @@ export const TreeNode = ({
             variant="subtle"
             color="green"
             className="absolute right-0 top-0"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => onAddSubTopicClick(node.id)}
           >
             <IconPlus size={16} stroke={1.5} />
           </ActionIcon>
@@ -60,25 +50,10 @@ export const TreeNode = ({
             key={subTopic.id}
             node={subTopic}
             onNodeClick={onNodeClick}
-            onAddSubTopic={onAddSubTopic}
+            onAddSubTopicClick={onAddSubTopicClick}
           />
         ))}
       </div>
-
-      <Modal
-        opened={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Add SubTopic"
-      >
-        <TextInput
-          placeholder="Topic Name"
-          value={subTopicName}
-          onChange={(event) => setSubTopicName(event.currentTarget.value)}
-        />
-        <Button onClick={handleAddSubTopic} color="green" mt="md">
-          Add
-        </Button>
-      </Modal>
     </div>
   );
 };

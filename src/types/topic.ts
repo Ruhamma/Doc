@@ -26,7 +26,7 @@ export interface Topic {
   id: string;
   name: string;
   content: string;
-  parentId: string | null;
+  parentId: string | undefined;
   subTopics?: Topic[];
 }
 

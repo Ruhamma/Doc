@@ -1,15 +1,15 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
-  Flex,
   Modal,
   Text,
   Group,
   Notification,
+  TextInput,
 } from "@mantine/core";
-import Navbar from "./component/Navbar";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { ForwardRefEditor } from "./component/mdxeditor/ForwardRefEditor";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -35,6 +35,7 @@ export default function Admin() {
   const [activeTopic, setActiveTopic] = useState<Topic | null>(null);
   const [deleteModalOpened, setDeleteModalOpened] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
+  const [editedTopicName, setEditedTopicName] = useState<string>(""); // State for topic name
   const ref = useRef<MDXEditorMethods>(null);
 
   const { data: topics, error, isLoading } = useGetTopicsQuery();
@@ -51,6 +52,7 @@ export default function Admin() {
         ref.current.setMarkdown(topicNode.content || "");
         setActiveContent(topicNode.content || "");
         setActiveTopic(topicNode);
+        setEditedTopicName(topicNode.name || ""); // Set the topic name
       }
     }
   }, [searchParams, topics]);
@@ -95,6 +97,12 @@ export default function Admin() {
     setActiveContent(newContent);
   };
 
+  const handleTopicNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setEditedTopicName(event.currentTarget.value);
+  };
+
   const findNodeById = (nodes: Topic[], id: string): Topic | null => {
     for (let topicNode of nodes) {
       if (topicNode.id === id) {
@@ -117,7 +125,7 @@ export default function Admin() {
       updateDoc({
         id: activeTopic.id,
         content: markdownContent,
-        name: activeTopic.name,
+        name: editedTopicName, // Use the updated topic name
       })
         .then(() => {
           setNotifications((prev) => [
@@ -169,63 +177,73 @@ export default function Admin() {
       <Box className="navbar fixed w-full bg-gray-300 h-16 z-10">
         <Header />
       </Box>
-      <Box className="flex flex-row h-full pt-16">
-        <TopicsSideBar topics={topics ?? []} onNodeClick={handleNodeClick} />
-        <Box className="editor flex-grow overflow-hidden relative">
-          <Box className="editor-content h-full overflow-y-auto">
-            <ForwardRefEditor
-              ref={ref}
-              markdown={activeContent}
-              onChange={handleEditorChange}
-            />
+      <div className="p-10s">
+        <Box className="flex flex-row h-full pt-16">
+          <TopicsSideBar topics={topics ?? []} onNodeClick={handleNodeClick} />
+          <Box className="editor flex-grow overflow-hidden relative">
+            <Box className="editor-header p-4 bg-gray-100 border-b">
+              <TextInput
+                value={editedTopicName}
+                onChange={handleTopicNameChange}
+                placeholder="Edit topic name"
+                size="md"
+              />
+            </Box>
+            <Box className="editor-content h-full overflow-y-auto">
+              <ForwardRefEditor
+                ref={ref}
+                markdown={activeContent}
+                onChange={handleEditorChange}
+              />
+            </Box>
           </Box>
         </Box>
-      </Box>
-      <Box className="fixed right-4 bottom-4 flex space-x-4 p-10">
-        <Button
-          className="text-white px-4 py-2 rounded shadow-md hover:bg-green-600"
-          variant="filled"
-          color="gray"
-          onClick={handleSaveClick}
-          disabled={isUpdating}
-        >
-          <IconDownload size={20} />
-          Save
-        </Button>
-        <Button
-          className="text-white px-4 py-2 rounded shadow-md hover:bg-blue-600"
-          variant="outline"
-          color="red"
-          onClick={handleDeleteClick}
-          disabled={isDeleting}
-        >
-          <IconTrash size={20} />
-          Delete
-        </Button>
-      </Box>
-
-      <Modal
-        opened={deleteModalOpened}
-        onClose={() => setDeleteModalOpened(false)}
-        title="Confirm Deletion"
-      >
-        <Text>
-          Are you sure you want to delete this topic and its subtopics?
-        </Text>
-        <Group mt="md">
+        <Box className="fixed right-4 bottom-4 flex space-x-4 p-10">
           <Button
             className="text-white px-4 py-2 rounded shadow-md hover:bg-green-600"
             variant="filled"
             color="gray"
-            onClick={() => setDeleteModalOpened(false)}
+            onClick={handleSaveClick}
+            disabled={isUpdating}
           >
-            Cancel
+            <IconDownload size={20} />
+            Save
           </Button>
-          <Button color="red" onClick={confirmDelete} loading={isDeleting}>
+          <Button
+            className="text-white px-4 py-2 rounded shadow-md hover:bg-blue-600"
+            variant="outline"
+            color="red"
+            onClick={handleDeleteClick}
+            disabled={isDeleting}
+          >
+            <IconTrash size={20} />
             Delete
           </Button>
-        </Group>
-      </Modal>
+        </Box>
+
+        <Modal
+          opened={deleteModalOpened}
+          onClose={() => setDeleteModalOpened(false)}
+          title="Confirm Deletion"
+        >
+          <Text>
+            Are you sure you want to delete this topic and its subtopics?
+          </Text>
+          <Group mt="md">
+            <Button
+              className="text-white px-4 py-2 rounded shadow-md hover:bg-green-600"
+              variant="filled"
+              color="gray"
+              onClick={() => setDeleteModalOpened(false)}
+            >
+              Cancel
+            </Button>
+            <Button color="red" onClick={confirmDelete} loading={isDeleting}>
+              Delete
+            </Button>
+          </Group>
+        </Modal>
+      </div>
 
       {notifications.map((notification, index) => (
         <Notification
