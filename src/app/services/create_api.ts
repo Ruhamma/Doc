@@ -11,7 +11,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const createDocApi = createApi({
   reducerPath: "CreatedocApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://pis-employee-backend.onrender.com/api/v1",
+    baseUrl: "https://nest-docs-2.onrender.com",
   }),
   tagTypes: ["doc"],
   endpoints: (builder) => ({
@@ -42,6 +42,16 @@ export const createDocApi = createApi({
         method: "DELETE",
       }),
     }),
+    login: builder.mutation<
+      { access_token: string },
+      { userName: string; password: string }
+    >({
+      query: (credentials) => ({
+        url: `/auth/login`,
+        method: "POST",
+        body: credentials,
+      }),
+    }),
   }),
 });
 export const {
@@ -50,4 +60,5 @@ export const {
   useUpdateDocMutation,
   useGetTopicsQuery,
   useDeleteTopicMutation,
+  useLoginMutation,
 } = createDocApi;
