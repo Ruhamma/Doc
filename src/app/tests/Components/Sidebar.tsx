@@ -15,7 +15,7 @@ const Sidebar = () => {
     data,
     error: allDataError,
     isLoading: isAllDataLoading,
-  } =  useGetTopicsQuery();
+  } = useGetTopicsQuery();
 
   console.log(" flat data", data);
 
@@ -65,6 +65,8 @@ const Sidebar = () => {
   }
 
   const newData = convertToTree(data);
+
+  console.log("new data", newData);
 
   return (
     <div className="w-[365px] h-full border-b border-gray-200 dark:border-gray-700 pl-8 overflow-y-auto">
