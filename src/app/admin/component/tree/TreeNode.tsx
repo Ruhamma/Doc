@@ -45,7 +45,7 @@ export const TreeNode = ({
       </div>
 
       <div className="ml-4">
-        {node.subTopics?.map((subTopic) => (
+        {node.subcategories?.map((subTopic) => (
           <TreeNode
             key={subTopic.id}
             node={subTopic}

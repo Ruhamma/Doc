@@ -108,8 +108,8 @@ export default function Admin() {
       if (topicNode.id === id) {
         return topicNode;
       }
-      if (topicNode.subTopics) {
-        const foundNode = findNodeById(topicNode.subTopics, id);
+      if (topicNode.subcategories) {
+        const foundNode = findNodeById(topicNode.subcategories, id);
         if (foundNode) {
           return foundNode;
         }
@@ -124,14 +124,16 @@ export default function Admin() {
 
       updateDoc({
         id: activeTopic.id,
+        name: editedTopicName,
         content: markdownContent,
-        name: editedTopicName, // Use the updated topic name
+        parentCategoryId: activeTopic.parentId || "", // Include parentCategoryId if applicable
       })
-        .then(() => {
+        .then((response) => {
           setNotifications((prev) => [
             ...prev,
             { type: "info", message: "Content updated successfully" },
           ]);
+          console.log("Update response:", response);
         })
         .catch((err) => {
           console.error("Update error:", err);

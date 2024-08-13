@@ -1,18 +1,45 @@
-import {
-  NewSubtopicBody,
-  NewTopicBody,
-  Topic,
-  TopicsResponse,
-  UpdateDoc,
-} from "@/types/topic";
-
+import { NewTopicBody, Topic, UpdateDoc, UpdatedTopic } from "@/types/topic";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
+const baseQuery = fetchBaseQuery({
+  baseUrl: "https://nest-docs-2.onrender.com",
+  prepareHeaders: (headers) => {
+    // Retrieve the token from local storage
+    const token = localStorage.getItem("authToken");
+    // If a token is available, add it to the headers
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+    return headers;
+  },
+});
+
+const baseQueryWithErrorHandling = async (
+  args: any,
+  api: any,
+  extraOptions: any
+) => {
+  try {
+    const result = await baseQuery(args, api, extraOptions);
+    if (result.error) {
+      if (result.error.status === 401) {
+        console.error("Unauthorized request");
+      } else if (result.error.status === 500) {
+        console.error("Server error");
+      } else {
+        console.error("An error occurred:", result.error);
+      }
+    }
+    return result;
+  } catch (error) {
+    console.error("Unexpected error:", error);
+    throw error;
+  }
+};
 
 export const createDocApi = createApi({
   reducerPath: "CreatedocApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://nest-docs-2.onrender.com",
-  }),
+  baseQuery: baseQueryWithErrorHandling,
   tagTypes: ["doc"],
   endpoints: (builder) => ({
     createTopic: builder.mutation<Topic, NewTopicBody>({
@@ -23,11 +50,15 @@ export const createDocApi = createApi({
       }),
     }),
 
-    updateDoc: builder.mutation<Topic, UpdateDoc>({
+    updateDoc: builder.mutation<UpdatedTopic, UpdateDoc>({
       query: (updateDoc: UpdateDoc) => ({
-        url: `/categories/${updateDoc.id}`,
-        method: "PUT",
-        body: { content: updateDoc.content },
+        url: `/category`,
+        method: "POST", // Change to POST for creation of a subcategory
+        body: {
+          name: updateDoc.name,
+          content: updateDoc.content,
+          parentCategoryId: updateDoc.parentCategoryId,
+        },
       }),
     }),
     getTopics: builder.query<Topic[], void>({
@@ -44,7 +75,7 @@ export const createDocApi = createApi({
     }),
     login: builder.mutation<
       { access_token: string },
-      { userName: string; password: string }
+      { username: string; password: string }
     >({
       query: (credentials) => ({
         url: `/auth/login`,
@@ -54,9 +85,9 @@ export const createDocApi = createApi({
     }),
   }),
 });
+
 export const {
   useCreateTopicMutation,
-
   useUpdateDocMutation,
   useGetTopicsQuery,
   useDeleteTopicMutation,

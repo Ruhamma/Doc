@@ -1,8 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Modal, TextInput, Stack } from "@mantine/core";
-import { Topic } from "@/types/topic";
-import { generateTopicTree } from "./generateTopic";
+import { NewTopicBody, Topic } from "@/types/topic";
 import TreeNode from "./TreeNode";
 import { useCreateTopicMutation } from "@/app/services/create_api";
 
@@ -21,15 +20,14 @@ const TopicsSideBar = ({ topics, onNodeClick }: TopicsSideBarProps) => {
 
   const handleAddSubTopic = async () => {
     if (currentParentId && newTopicName.trim() !== "") {
-      const newSubTopic: Omit<Topic, "id"> = {
+      const newSubTopic: NewTopicBody = {
         name: newTopicName,
-        content: "",
-        parentId: currentParentId,
+        content: "", // or omit if not required
       };
 
       try {
         const response = await createTopic(newSubTopic).unwrap();
-        const updatedSubTopic = { ...newSubTopic, id: response.id };
+        const updatedSubTopic = { ...response, parentId: currentParentId };
 
         const addSubTopicToNode = (
           nodes: Topic[],
@@ -39,13 +37,13 @@ const TopicsSideBar = ({ topics, onNodeClick }: TopicsSideBarProps) => {
             if (node.id === parentId) {
               return {
                 ...node,
-                subTopics: [...(node.subTopics || []), updatedSubTopic],
+                subcategories: [...(node.subcategories || []), updatedSubTopic],
               };
             }
-            if (node.subTopics) {
+            if (node.subcategories) {
               return {
                 ...node,
-                subTopics: addSubTopicToNode(node.subTopics, parentId),
+                subcategories: addSubTopicToNode(node.subcategories, parentId),
               };
             }
             return node;
@@ -58,20 +56,21 @@ const TopicsSideBar = ({ topics, onNodeClick }: TopicsSideBarProps) => {
       } catch (error) {
         console.error("Failed to create subtopic:", error);
       }
+    } else {
+      console.error("Subtopic creation failed: invalid data.");
     }
   };
 
   const handleAddTopLevelTopic = async () => {
     if (newTopicName.trim() !== "") {
-      const newTopic: Omit<Topic, "id"> = {
+      const newTopic: NewTopicBody = {
         name: newTopicName,
-        content: "",
-        parentId: undefined,
+        content: "", // or omit if not required
       };
 
       try {
         const response = await createTopic(newTopic).unwrap();
-        const addedTopic = { ...newTopic, id: response.id };
+        const addedTopic = { ...response };
 
         setNodes([...nodes, addedTopic]);
         setIsModalOpen(false);
@@ -79,6 +78,8 @@ const TopicsSideBar = ({ topics, onNodeClick }: TopicsSideBarProps) => {
       } catch (error) {
         console.error("Failed to create topic:", error);
       }
+    } else {
+      console.error("Top level topic creation failed: invalid data.");
     }
   };
 
@@ -90,25 +91,22 @@ const TopicsSideBar = ({ topics, onNodeClick }: TopicsSideBarProps) => {
     }
   };
 
+  // Open Modal for Adding SubTopic
   const handleAddSubTopicClick = (parentId: string) => {
     setCurrentParentId(parentId);
     setIsAddingSubTopic(true);
     setIsModalOpen(true);
   };
 
-  const treeContent = generateTopicTree(
-    nodes.filter((d) => !d.parentId),
-    nodes
-  );
-
+  // Render
   return (
     <div className="sidebar p-6 h-full overflow-y-auto border-r border-gray-200">
-      {treeContent.map((node) => (
+      {nodes.map((node) => (
         <TreeNode
           key={node.id}
           node={node}
           onNodeClick={onNodeClick}
-          onAddSubTopicClick={handleAddSubTopicClick} // Pass handler
+          onAddSubTopicClick={handleAddSubTopicClick}
         />
       ))}
       <Stack pl={"sm"}>

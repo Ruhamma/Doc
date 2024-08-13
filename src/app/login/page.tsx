@@ -19,7 +19,7 @@ import Link from "next/link";
 import { useLoginMutation } from "../services/create_api";
 
 const schema = z.object({
-  userName: z
+  username: z
     .string()
     .min(1, { message: "Username is required" })
     .min(3, { message: "Username must be at least 3 characters" }),
@@ -96,10 +96,10 @@ const LoginPage = () => {
                     "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm",
                   label: "block text-sm font-medium text-gray-700",
                 }}
-                {...register("userName")}
+                {...register("username")}
                 label="Username"
                 placeholder="Enter your Username"
-                error={errors.userName?.message}
+                error={errors.username?.message}
               />
 
               <PasswordInput

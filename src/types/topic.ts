@@ -1,17 +1,23 @@
 export interface NewTopicBody {
   name: string;
+  content?: string;
 }
-
-export interface NewSubtopicBody {
-  name: string;
-  parentCategoryId: string;
-}
-
 export interface UpdateDoc {
   name: string;
   content: string;
+  parentCategoryId: string;
 }
 
+export interface UpdatedTopic {
+  id: string;
+  name: string;
+  content: string;
+  parentCategory: {
+    id: string;
+    name: string;
+    content: string | null;
+  };
+}
 export interface SubTopic {
   id: string;
   name: string;
@@ -25,9 +31,9 @@ export interface SubTopic {
 export interface Topic {
   id: string;
   name: string;
-  content: string;
-  parentId: string | undefined;
-  subTopics?: Topic[];
+  content: string | null;
+  parentId?: string;
+  subcategories?: Topic[];
 }
 
 export interface UpdateDoc {
