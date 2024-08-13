@@ -6,13 +6,15 @@ import { IconPlus } from "@tabler/icons-react";
 interface TreeNodeProps {
   node: Topic;
   onNodeClick: (node: Topic) => void;
-  onAddSubTopicClick: (parentId: string) => void; // Update prop name
+  onAddSubTopicClick: (parentId: string) => void;
+  isAdmin: boolean; // New prop to check if the user is an admin
 }
 
 export const TreeNode = ({
   node,
   onNodeClick,
   onAddSubTopicClick,
+  isAdmin,
 }: TreeNodeProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -31,17 +33,18 @@ export const TreeNode = ({
         >
           {node.name}
         </Button>
-        {isHovered && (
-          <ActionIcon
-            key={node.id}
-            variant="subtle"
-            color="green"
-            className="absolute right-0 top-0"
-            onClick={() => onAddSubTopicClick(node.id)}
-          >
-            <IconPlus size={16} stroke={1.5} />
-          </ActionIcon>
-        )}
+        {isAdmin &&
+          isHovered && ( // Render the Add SubTopic icon only if the user is an admin
+            <ActionIcon
+              key={node.id}
+              variant="subtle"
+              color="green"
+              className="absolute right-0 top-0"
+              onClick={() => onAddSubTopicClick(node.id)}
+            >
+              <IconPlus size={16} stroke={1.5} />
+            </ActionIcon>
+          )}
       </div>
 
       <div className="ml-4">
@@ -51,6 +54,7 @@ export const TreeNode = ({
             node={subTopic}
             onNodeClick={onNodeClick}
             onAddSubTopicClick={onAddSubTopicClick}
+            isAdmin={isAdmin} // Pass the isAdmin prop down
           />
         ))}
       </div>

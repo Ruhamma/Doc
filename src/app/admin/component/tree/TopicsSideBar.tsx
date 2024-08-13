@@ -8,9 +8,14 @@ import { useCreateTopicMutation } from "@/app/services/create_api";
 interface TopicsSideBarProps {
   topics: Topic[];
   onNodeClick: (node: Topic) => void;
+  isAdmin: boolean; // New prop to check if the user is an admin
 }
 
-const TopicsSideBar = ({ topics, onNodeClick }: TopicsSideBarProps) => {
+const TopicsSideBar = ({
+  topics,
+  onNodeClick,
+  isAdmin,
+}: TopicsSideBarProps) => {
   const [nodes, setNodes] = useState<Topic[]>(topics);
   const [createTopic] = useCreateTopicMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -98,7 +103,6 @@ const TopicsSideBar = ({ topics, onNodeClick }: TopicsSideBarProps) => {
     setIsModalOpen(true);
   };
 
-  // Render
   return (
     <div className="sidebar p-6 h-full overflow-y-auto border-r border-gray-200">
       {nodes.map((node) => (
@@ -107,24 +111,26 @@ const TopicsSideBar = ({ topics, onNodeClick }: TopicsSideBarProps) => {
           node={node}
           onNodeClick={onNodeClick}
           onAddSubTopicClick={handleAddSubTopicClick}
+          isAdmin={isAdmin} // Pass the isAdmin prop down
         />
       ))}
-      <Stack pl={"sm"}>
-        <Button
-          className="text-white px-4 py-2 rounded shadow-md hover:bg-green-600"
-          variant="filled"
-          size="sm"
-          color="gray"
-          onClick={() => {
-            setCurrentParentId(null);
-            setIsAddingSubTopic(false);
-            setIsModalOpen(true);
-          }}
-        >
-          Add Topic
-        </Button>
-      </Stack>
-
+      {isAdmin && ( // Render the Add Topic button only if the user is an admin
+        <Stack pl={"sm"}>
+          <Button
+            className="text-white px-4 py-2 rounded shadow-md hover:bg-green-600"
+            variant="filled"
+            size="sm"
+            color="gray"
+            onClick={() => {
+              setCurrentParentId(null);
+              setIsAddingSubTopic(false);
+              setIsModalOpen(true);
+            }}
+          >
+            Add Topic
+          </Button>
+        </Stack>
+      )}
       <Modal
         opened={isModalOpen}
         onClose={() => setIsModalOpen(false)}
