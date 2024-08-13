@@ -181,7 +181,12 @@ export default function Admin() {
       </Box>
       <div className="p-10s">
         <Box className="flex flex-row h-full pt-16">
-          <TopicsSideBar topics={topics ?? []} onNodeClick={handleNodeClick} />
+          <TopicsSideBar
+            topics={topics ?? []}
+            onNodeClick={handleNodeClick}
+            isAdmin={true}
+          />
+
           <Box className="editor flex-grow overflow-hidden relative">
             <Box className="editor-header p-4 bg-gray-100 border-b">
               <TextInput

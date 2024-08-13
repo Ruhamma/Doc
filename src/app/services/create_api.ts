@@ -50,15 +50,11 @@ export const createDocApi = createApi({
       }),
     }),
 
-    updateDoc: builder.mutation<UpdatedTopic, UpdateDoc>({
+    updateDoc: builder.mutation<Topic, UpdateDoc>({
       query: (updateDoc: UpdateDoc) => ({
-        url: `/category`,
-        method: "POST", // Change to POST for creation of a subcategory
-        body: {
-          name: updateDoc.name,
-          content: updateDoc.content,
-          parentCategoryId: updateDoc.parentCategoryId,
-        },
+        url: `/categories/${updateDoc.id}`,
+        method: "PUT",
+        body: { content: updateDoc.content },
       }),
     }),
     getTopics: builder.query<Topic[], void>({
@@ -66,9 +62,6 @@ export const createDocApi = createApi({
         url: `/categories`,
         method: "GET",
       }),
-    }),
-    getSubCategoryById: builder.query({
-      query: (id) => `/categories/content/${id}`, // Fetch a single document by ID
     }),
     deleteTopic: builder.mutation<{ success: boolean; id: string }, string>({
       query: (id) => ({
@@ -95,5 +88,4 @@ export const {
   useGetTopicsQuery,
   useDeleteTopicMutation,
   useLoginMutation,
-  useGetSubCategoryByIdQuery
 } = createDocApi;

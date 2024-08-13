@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Sidebar from "../Components/Sidebar";
-import ContentDisplay from "../Components/ContentDisplay";
+
 import Header from "../Components/Header";
 import TopicsSideBar from "@/app/admin/component/tree/TopicsSideBar";
 import { Topic } from "@/types/topic";
@@ -24,8 +24,13 @@ const Page = () => {
       </div>
       <div className="flex pt-8">
         {/* <Sidebar /> */}
-        <TopicsSideBar topics={topics ?? []} onNodeClick={handleNodeClick} />
-        <ContentDisplay />
+        <TopicsSideBar
+          topics={topics ?? []}
+          onNodeClick={handleNodeClick}
+          isAdmin={false}
+        />
+
+        {/* <ContentDisplay /> */}
       </div>
     </div>
   );
