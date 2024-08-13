@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { useGetDocsQuery } from "@/store/api";
+// import { useGetDocsQuery } from "@/store/api";
+import { useGetTopicsQuery } from "@/app/services/create_api";
 import { slugify } from "@/utils";
 
 interface SidebarProps {
@@ -14,7 +15,7 @@ const Sidebar = () => {
     data,
     error: allDataError,
     isLoading: isAllDataLoading,
-  } = useGetDocsQuery();
+  } =  useGetTopicsQuery();
 
   console.log(" flat data", data);
 
