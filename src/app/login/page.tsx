@@ -7,26 +7,19 @@ import {
   Flex,
   Group,
   PasswordInput,
-  Text,
   TextInput,
 } from "@mantine/core";
 import Image from "next/image";
 import React from "react";
 import * as z from "zod";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { useRouter } from "next/navigation";
-import {
-  loginFail,
-  loginStart,
-  loginSuccess,
-} from "@/store/features/auth_slice";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
+import { useLoginMutation } from "../services/create_api";
 
 const schema = z.object({
-  userName: z
+  username: z
     .string()
     .min(1, { message: "Username is required" })
     .min(3, { message: "Username must be at least 3 characters" }),
@@ -39,6 +32,7 @@ type FormData = z.infer<typeof schema>;
 
 const LoginPage = () => {
   const router = useRouter();
+  const [login, { isLoading, error }] = useLoginMutation();
 
   const {
     register,
@@ -46,9 +40,29 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  const onSubmit = async (data: FormData) => {};
-  const handleSecondaryButtonClick = () => {
-    router.push("/admin");
+  const onSubmit = async (data: FormData) => {
+    try {
+      const response = await login(data).unwrap();
+      if (response.access_token) {
+        localStorage.setItem("authToken", response.access_token);
+        router.push("/admin");
+      } else {
+        console.error("Invalid response structure:", response);
+      }
+    } catch (err) {
+      let errorMessage = "Login failed";
+      if (err && typeof err === "object" && "data" in err) {
+        const errorData = (err as { data?: unknown }).data;
+        if (
+          typeof errorData === "object" &&
+          errorData &&
+          "message" in errorData
+        ) {
+          errorMessage = (errorData as { message: string }).message;
+        }
+      }
+      console.error("Login failed:", errorMessage);
+    }
   };
 
   return (
@@ -82,10 +96,10 @@ const LoginPage = () => {
                     "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm",
                   label: "block text-sm font-medium text-gray-700",
                 }}
-                {...register("userName")}
+                {...register("username")}
                 label="Username"
                 placeholder="Enter your Username"
-                error={errors.userName && errors.userName.message}
+                error={errors.username?.message}
               />
 
               <PasswordInput
@@ -97,7 +111,7 @@ const LoginPage = () => {
                 {...register("password")}
                 label="Password"
                 placeholder="Enter your password"
-                error={errors.password && errors.password.message}
+                error={errors.password?.message}
               />
 
               <Button
@@ -105,10 +119,20 @@ const LoginPage = () => {
                 className="shadow-xl px-4"
                 size="md"
                 color="#595959"
-                onClick={handleSecondaryButtonClick}
+                type="submit"
+                disabled={isLoading}
               >
-                Login
+                {isLoading ? "Logging in..." : "Login"}
               </Button>
+
+              {error && (
+                <Alert color="red" mt="md">
+                  {typeof error === "object" && "data" in error
+                    ? (error.data as { message?: string }).message ||
+                      "An error occurred. Please try again."
+                    : "An unexpected error occurred."}
+                </Alert>
+              )}
             </Flex>
           </form>
         </Flex>
