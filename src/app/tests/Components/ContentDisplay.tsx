@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { useGetDocByIdQuery } from "@/store/api";
+// import { useGetDocByIdQuery } from "@/store/api";
+import { useGetSubCategoryByIdQuery } from "@/app/services/create_api";
 import { serializeMDX } from "@/utils/mdx";
 import { MDXRemote, MDXRemoteProps } from "next-mdx-remote";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -60,7 +61,7 @@ const ContentDisplay = () => {
     data,
     error: singleDocError,
     isLoading: isSingleDocLoading,
-  } = useGetDocByIdQuery(categoryId);
+  } = useGetSubCategoryByIdQuery(categoryId);
   const [mdxSource, setMdxSource] = useState<MDXRemoteProps | null>(null);
 
   useEffect(() => {

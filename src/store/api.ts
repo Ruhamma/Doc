@@ -13,17 +13,14 @@ export const api = createApi({
       getDocById: builder.query({
         query: (id) => `/mmm/${id}`, // Fetch a single document by ID
       }),
-      getSubById: builder.query({
-        query: (id) => `/mmm/subCategory/${id}`, // Fetch a sub-category by ID
-      }),
+      // getSubById: builder.query({
+      //   query: (id) => `/mmm/subCategory/${id}`, // Fetch a sub-category by ID
+      // }),
     }),
   }),
 });
 
 export const {
   useGetDocsQuery,
-
   useGetDocByIdQuery,
-
-  useGetSubByIdQuery,
 } = api;
