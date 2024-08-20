@@ -59,7 +59,7 @@ export const createDocApi = createApi({
     }),
     getTopics: builder.query<Topic[], void>({
       query: () => ({
-        url: `/categories`,
+        url: `/categories/tree`,
         method: "GET",
       }),
     }),
