@@ -78,6 +78,7 @@ export const createDocApi = createApi({
         url: `/categories/${id}`,
         method: "GET",
       }),
+      providesTags: ["doc"],
     }),
     getTopics: builder.query<Topic[], void>({
       query: () => ({

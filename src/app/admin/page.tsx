@@ -132,7 +132,7 @@ export default function Admin() {
         id: activeTopic.id,
         name: editedTopicName,
         content: markdownContent,
-        parentCategoryId: activeTopic.parentId || "",
+        parentCategoryId: activeTopic.parentCategoryId || "",
       })
         .then((response) => {
           setNotifications((prev) => [

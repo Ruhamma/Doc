@@ -23,22 +23,23 @@ const TopicsSideBar = ({
   const [createTopic] = useCreateTopicMutation();
   const [createSubTopic] = useCreateSubTopicMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newTopicName, setNewTopicName] = useState<string>(""); // Ensure it's always a string
+  const [newTopicName, setNewTopicName] = useState<string>("");
   const [currentParentId, setCurrentParentId] = useState<string | null>(null);
   const [isAddingSubTopic, setIsAddingSubTopic] = useState<boolean>(false);
 
   const handleAddSubTopic = async () => {
-    if (currentParentId && newTopicName !== "") {
+    if (currentParentId && newTopicName.trim()) {
       const newSubTopic: NewSubTopicBody = {
-        name: newTopicName,
+        name: newTopicName.trim(),
         content: "",
-        parentId: currentParentId,
+        parentCategoryId: currentParentId,
       };
-
       try {
         const response = await createSubTopic(newSubTopic).unwrap();
-        const updatedSubTopic = { ...response, parentId: currentParentId };
-
+        const updatedSubTopic = {
+          ...response,
+          parentCategoryId: currentParentId,
+        };
         const addSubTopicToNode = (
           nodes: Topic[],
           parentId: string
@@ -59,7 +60,6 @@ const TopicsSideBar = ({
             return node;
           });
         };
-
         setNodes(addSubTopicToNode(nodes, currentParentId));
         setIsModalOpen(false);
         setNewTopicName("");
@@ -72,15 +72,15 @@ const TopicsSideBar = ({
   };
 
   const handleAddTopLevelTopic = async () => {
-    if (newTopicName !== "") {
+    if (newTopicName.trim()) {
       const newTopic: NewTopicBody = {
-        name: newTopicName,
-        content: "", // or omit if not required
+        name: newTopicName.trim(),
+        content: "",
       };
 
       try {
         const response = await createTopic(newTopic).unwrap();
-        const addedTopic = { ...response };
+        const addedTopic = { ...response, subcategories: [] }; // Ensure subcategories is always initialized
 
         setNodes([...nodes, addedTopic]);
         setIsModalOpen(false);
@@ -89,7 +89,7 @@ const TopicsSideBar = ({
         console.error("Failed to create topic:", error);
       }
     } else {
-      console.error("Top level topic creation failed: invalid data.");
+      console.error("Top-level topic creation failed: invalid data.");
     }
   };
 
@@ -101,7 +101,6 @@ const TopicsSideBar = ({
     }
   };
 
-  // Open Modal for Adding SubTopic
   const handleAddSubTopicClick = (parentId: string) => {
     setCurrentParentId(parentId);
     setIsAddingSubTopic(true);
@@ -144,7 +143,7 @@ const TopicsSideBar = ({
         <TextInput
           placeholder={isAddingSubTopic ? "SubTopic Name" : "Topic Name"}
           value={newTopicName}
-          onChange={(event) => setNewTopicName(event.currentTarget.value || "")} // Safeguard against null/undefined
+          onChange={(event) => setNewTopicName(event.currentTarget.value)}
         />
         <Button onClick={handleModalConfirm} color="green" mt="md">
           Add

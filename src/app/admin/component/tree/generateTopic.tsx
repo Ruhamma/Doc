@@ -10,7 +10,7 @@ export const generateTopicTree = (
 
   return topics.map((topic) => {
     const children = allTopics.filter(
-      (subcategories) => subcategories.parentId === topic.id
+      (subcategories) => subcategories.parentCategoryId === topic.id
     );
     return {
       ...topic,

@@ -7,7 +7,7 @@ interface TreeNodeProps {
   node: Topic;
   onNodeClick: (node: Topic) => void;
   onAddSubTopicClick: (parentId: string) => void;
-  isAdmin: boolean; // New prop to check if the user is an admin
+  isAdmin: boolean;
 }
 
 export const TreeNode = ({
@@ -24,7 +24,7 @@ export const TreeNode = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div items-center>
+      <div>
         <Button
           className="truncate max-w-[calc(100%-32px)] text-left"
           variant="subtle"
@@ -33,30 +33,32 @@ export const TreeNode = ({
         >
           {node.name}
         </Button>
-        {isAdmin &&
-          isHovered && ( // Render the Add SubTopic icon only if the user is an admin
-            <ActionIcon
-              key={node.id}
-              variant="subtle"
-              color="green"
-              className="absolute right-0 top-0"
-              onClick={() => onAddSubTopicClick(node.id)}
-            >
-              <IconPlus size={16} stroke={1.5} />
-            </ActionIcon>
-          )}
+        {isAdmin && isHovered && (
+          <ActionIcon
+            key={node.id}
+            variant="subtle"
+            color="green"
+            className="absolute right-0 top-0"
+            onClick={() => onAddSubTopicClick(node.id)}
+          >
+            <IconPlus size={16} stroke={1.5} />
+          </ActionIcon>
+        )}
       </div>
 
+      {/* Ensure subcategories are handled safely */}
       <div className="ml-4">
-        {node.subcategories?.map((subTopic) => (
-          <TreeNode
-            key={subTopic.id}
-            node={subTopic}
-            onNodeClick={onNodeClick}
-            onAddSubTopicClick={onAddSubTopicClick}
-            isAdmin={isAdmin} // Pass the isAdmin prop down
-          />
-        ))}
+        {node.subcategories &&
+          node.subcategories.length > 0 && // Check if subcategories exist and are non-empty
+          node.subcategories.map((subTopic) => (
+            <TreeNode
+              key={subTopic.id}
+              node={subTopic}
+              onNodeClick={onNodeClick}
+              onAddSubTopicClick={onAddSubTopicClick}
+              isAdmin={isAdmin}
+            />
+          ))}
       </div>
     </div>
   );

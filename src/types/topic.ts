@@ -6,7 +6,7 @@ export interface NewTopicBody {
 export interface NewSubTopicBody {
   name: string;
   content: string;
-  parentId: string;
+  parentCategoryId: string;
 }
 export interface UpdateDoc {
   name: string;
@@ -38,7 +38,7 @@ export interface Topic {
   id: string;
   name: string;
   content: string | null;
-  parentId?: string;
+  parentCategoryId?: string;
   subcategories?: Topic[];
 }
 
