@@ -1,4 +1,10 @@
-import { NewTopicBody, Topic, UpdateDoc, UpdatedTopic } from "@/types/topic";
+import {
+  NewTopicBody,
+  SingleTopic,
+  Topic,
+  UpdateDoc,
+  UpdatedTopic,
+} from "@/types/topic";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
@@ -43,21 +49,34 @@ export const createDocApi = createApi({
   tagTypes: ["doc"],
   endpoints: (builder) => ({
     createTopic: builder.mutation<Topic, NewTopicBody>({
-      query: (newTopic: NewTopicBody) => ({
-        url: `/categories`,
+      query: (newTopic) => ({
+        url: "/categories",
         method: "POST",
         body: newTopic,
       }),
       invalidatesTags: ["doc"],
     }),
-
-    updateDoc: builder.mutation<Topic, UpdateDoc>({
-      query: (updateDoc: UpdateDoc) => ({
-        url: `/categories/${updateDoc.id}`,
-        method: "PUT",
-        body: { content: updateDoc.content },
+    createSubTopic: builder.mutation<Topic, NewTopicBody>({
+      query: (newSubTopic) => ({
+        url: "/categories",
+        method: "POST",
+        body: newSubTopic,
       }),
       invalidatesTags: ["doc"],
+    }),
+    updateDoc: builder.mutation<Topic[], UpdateDoc>({
+      query: ({ id, name, content }: UpdateDoc) => ({
+        url: `/categories/${id}`,
+        method: "PUT",
+        body: { name, content },
+      }),
+      invalidatesTags: ["doc"],
+    }),
+    getContentById: builder.query<SingleTopic, string>({
+      query: (id) => ({
+        url: `/categories/${id}`,
+        method: "GET",
+      }),
     }),
     getTopics: builder.query<Topic[], void>({
       query: () => ({
@@ -88,8 +107,10 @@ export const createDocApi = createApi({
 
 export const {
   useCreateTopicMutation,
+  useCreateSubTopicMutation,
   useUpdateDocMutation,
   useGetTopicsQuery,
   useDeleteTopicMutation,
   useLoginMutation,
+  useGetContentByIdQuery,
 } = createDocApi;

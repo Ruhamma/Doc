@@ -2,6 +2,11 @@ export interface NewTopicBody {
   name: string;
   content?: string;
 }
+
+interface NewSubTopicBody extends NewTopicBody {
+  content: string;
+  parentId: string;
+}
 export interface UpdateDoc {
   name: string;
   content: string;
@@ -44,6 +49,14 @@ export interface Tree {
 
 export interface UpdateDoc {
   id: string;
+  name: string;
   content: string;
 }
 export type TopicsResponse = Topic[];
+
+export interface SingleTopic {
+  id: string;
+  name: string;
+  content: string;
+  parentId: string;
+}

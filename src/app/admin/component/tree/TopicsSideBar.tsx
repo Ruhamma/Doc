@@ -1,8 +1,12 @@
 "use client";
-import React from "react";
-import { Button, Stack } from "@mantine/core";
+import React, { useState } from "react";
+import { Button, Modal, TextInput, Stack } from "@mantine/core";
+import { NewTopicBody, Topic } from "@/types/topic";
 import TreeNode from "./TreeNode";
-import { Topic } from "@/types/topic"; // Use the imported Topic type
+import {
+  useCreateSubTopicMutation,
+  useCreateTopicMutation,
+} from "@/app/services/create_api";
 
 interface TopicsSideBarProps {
   topics: Topic[];
@@ -15,16 +19,102 @@ const TopicsSideBar = ({
   onNodeClick,
   isAdmin,
 }: TopicsSideBarProps) => {
+  const [nodes, setNodes] = useState<Topic[]>(topics);
+  const [createTopic] = useCreateTopicMutation();
+  const [createSubTopic] = useCreateSubTopicMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newTopicName, setNewTopicName] = useState<string>(""); // Ensure it's always a string
+  const [currentParentId, setCurrentParentId] = useState<string | null>(null);
+  const [isAddingSubTopic, setIsAddingSubTopic] = useState<boolean>(false);
+
+  const handleAddSubTopic = async () => {
+    if (currentParentId && newTopicName !== "") {
+      const newSubTopic: NewTopicBody = {
+        name: newTopicName,
+        content: "", // or omit if not required
+      };
+
+      try {
+        const response = await createSubTopic(newSubTopic).unwrap();
+        const updatedSubTopic = { ...response, parentId: currentParentId };
+
+        const addSubTopicToNode = (
+          nodes: Topic[],
+          parentId: string
+        ): Topic[] => {
+          return nodes.map((node) => {
+            if (node.id === parentId) {
+              return {
+                ...node,
+                subcategories: [...(node.subcategories || []), updatedSubTopic],
+              };
+            }
+            if (node.subcategories) {
+              return {
+                ...node,
+                subcategories: addSubTopicToNode(node.subcategories, parentId),
+              };
+            }
+            return node;
+          });
+        };
+
+        setNodes(addSubTopicToNode(nodes, currentParentId));
+        setIsModalOpen(false);
+        setNewTopicName("");
+      } catch (error) {
+        console.error("Failed to create subtopic:", error);
+      }
+    } else {
+      console.error("Subtopic creation failed: invalid data.");
+    }
+  };
+
+  const handleAddTopLevelTopic = async () => {
+    if (newTopicName !== "") {
+      const newTopic: NewTopicBody = {
+        name: newTopicName,
+        content: "", // or omit if not required
+      };
+
+      try {
+        const response = await createTopic(newTopic).unwrap();
+        const addedTopic = { ...response };
+
+        setNodes([...nodes, addedTopic]);
+        setIsModalOpen(false);
+        setNewTopicName("");
+      } catch (error) {
+        console.error("Failed to create topic:", error);
+      }
+    } else {
+      console.error("Top level topic creation failed: invalid data.");
+    }
+  };
+
+  const handleModalConfirm = () => {
+    if (isAddingSubTopic) {
+      handleAddSubTopic();
+    } else {
+      handleAddTopLevelTopic();
+    }
+  };
+
+  // Open Modal for Adding SubTopic
+  const handleAddSubTopicClick = (parentId: string) => {
+    setCurrentParentId(parentId);
+    setIsAddingSubTopic(true);
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="sidebar p-6 h-full overflow-y-auto border-r border-gray-200">
-      {topics.map((topic) => (
+      {nodes.map((node) => (
         <TreeNode
-          key={topic.id}
-          node={topic}
+          key={node.id}
+          node={node}
           onNodeClick={onNodeClick}
-          onAddSubTopicClick={(parentId) =>
-            console.log("Add sub-topic to:", parentId)
-          }
+          onAddSubTopicClick={handleAddSubTopicClick}
           isAdmin={isAdmin}
         />
       ))}
@@ -35,12 +125,30 @@ const TopicsSideBar = ({
             variant="filled"
             size="sm"
             color="gray"
-            onClick={() => console.log("Add Topic clicked")}
+            onClick={() => {
+              setCurrentParentId(null);
+              setIsAddingSubTopic(false);
+              setIsModalOpen(true);
+            }}
           >
             Add Topic
           </Button>
         </Stack>
       )}
+      <Modal
+        opened={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={isAddingSubTopic ? "Add SubTopic" : "Add Topic"}
+      >
+        <TextInput
+          placeholder={isAddingSubTopic ? "SubTopic Name" : "Topic Name"}
+          value={newTopicName}
+          onChange={(event) => setNewTopicName(event.currentTarget.value || "")} // Safeguard against null/undefined
+        />
+        <Button onClick={handleModalConfirm} color="green" mt="md">
+          Add
+        </Button>
+      </Modal>
     </div>
   );
 };

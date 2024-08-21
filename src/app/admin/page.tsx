@@ -17,6 +17,7 @@ import TopicsSideBar from "./component/tree/TopicsSideBar";
 import { Topic } from "@/types/topic";
 import {
   useGetTopicsQuery,
+  useGetContentByIdQuery,
   useUpdateDocMutation,
   useDeleteTopicMutation,
 } from "../services/create_api";
@@ -38,24 +39,41 @@ export default function Admin() {
   const [editedTopicName, setEditedTopicName] = useState<string>(""); // State for topic name
   const ref = useRef<MDXEditorMethods>(null);
 
-  const { data: topics, error, isLoading } = useGetTopicsQuery();
+  const {
+    data: topics,
+    error: topicsError,
+    isLoading: topicsLoading,
+  } = useGetTopicsQuery();
+  const {
+    data: topicData,
+    error: contentError,
+    isLoading: contentLoading,
+  } = useGetContentByIdQuery(searchParams.get("id") || "");
   const [updateDoc, { isLoading: isUpdating, error: updateError }] =
     useUpdateDocMutation();
   const [deleteTopic, { isLoading: isDeleting, error: deleteError }] =
     useDeleteTopicMutation();
 
   useEffect(() => {
-    const nodeId = searchParams.get("id");
-    if (nodeId && topics) {
-      const topicNode = findNodeById(topics, nodeId);
-      if (topicNode && ref.current) {
-        ref.current.setMarkdown(topicNode.content || "");
-        setActiveContent(topicNode.content || "");
-        setActiveTopic(topicNode);
-        setEditedTopicName(topicNode.name || ""); // Set the topic name
-      }
+    const timers = notifications.map((_, index) =>
+      setTimeout(() => {
+        setNotifications((prev) => prev.filter((_, i) => i !== index));
+      }, 5000)
+    );
+
+    return () => {
+      timers.forEach((timer) => clearTimeout(timer));
+    };
+  }, [notifications]);
+
+  useEffect(() => {
+    if (topicData) {
+      setActiveContent(topicData.content);
+      setActiveTopic(topicData);
+      setEditedTopicName(topicData.name);
+      ref.current?.setMarkdown(topicData.content);
     }
-  }, [searchParams, topics]);
+  }, [topicData]);
 
   useEffect(() => {
     if (updateError) {
@@ -76,15 +94,18 @@ export default function Admin() {
   }, [deleteError]);
 
   useEffect(() => {
-    if (error) {
+    if (topicsError) {
       setNotifications((prev) => [
         ...prev,
-        { type: "error", message: `Data fetch error: ${error.toString()}` },
+        {
+          type: "error",
+          message: `Data fetch error: ${topicsError.toString()}`,
+        },
       ]);
     }
-  }, [error]);
+  }, [topicsError]);
 
-  if (isLoading) {
+  if (topicsLoading || contentLoading) {
     return <SkeletonLayout />;
   }
 
@@ -101,21 +122,6 @@ export default function Admin() {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setEditedTopicName(event.currentTarget.value);
-  };
-
-  const findNodeById = (nodes: Topic[], id: string): Topic | null => {
-    for (let topicNode of nodes) {
-      if (topicNode.id === id) {
-        return topicNode;
-      }
-      if (topicNode.subcategories) {
-        const foundNode = findNodeById(topicNode.subcategories, id);
-        if (foundNode) {
-          return foundNode;
-        }
-      }
-    }
-    return null;
   };
 
   const handleSaveClick = () => {
@@ -180,6 +186,21 @@ export default function Admin() {
         <Header />
       </Box>
       <div className="p-10s">
+        <Box className="fixed top-16 right-4 z-50 space-y-4">
+          {notifications.map((notification, index) => (
+            <Notification
+              key={index}
+              color={notification.type === "error" ? "red" : "green"}
+              title={notification.type === "error" ? "Error" : "Success"}
+              onClose={() =>
+                setNotifications((prev) => prev.filter((_, i) => i !== index))
+              }
+              withCloseButton
+            >
+              {notification.message}
+            </Notification>
+          ))}
+        </Box>
         <Box className="flex flex-row h-full pt-16">
           <TopicsSideBar
             topics={topics ?? []}
@@ -252,19 +273,20 @@ export default function Admin() {
         </Modal>
       </div>
 
-      {notifications.map((notification, index) => (
-        <Notification
-          key={index}
-          color={notification.type === "error" ? "red" : "green"}
-          title={notification.type === "error" ? "Error" : "Success"}
-          onClose={() =>
-            setNotifications((prev) => prev.filter((_, i) => i !== index))
-          }
-          className="fixed right-4 bottom-4"
-        >
-          {notification.message}
-        </Notification>
-      ))}
+      <Box className="fixed top-2 right-4 space-y-4">
+        {notifications.map((notification, index) => (
+          <Notification
+            key={index}
+            color={notification.type === "error" ? "red" : "green"}
+            title={notification.type === "error" ? "Error" : "Success"}
+            onClose={() =>
+              setNotifications((prev) => prev.filter((_, i) => i !== index))
+            }
+          >
+            {notification.message}
+          </Notification>
+        ))}
+      </Box>
     </Box>
   );
 }
