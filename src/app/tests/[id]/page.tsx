@@ -23,12 +23,12 @@ const Page = () => {
         <Header />
       </div>
       <div className="flex pt-8">
-        {/* <Sidebar /> */}
-        <TopicsSideBar
+        <Sidebar />
+        {/* <TopicsSideBar
           topics={topics ?? []}
           onNodeClick={handleNodeClick}
           isAdmin={false}
-        />
+        /> */}
 
         {/* <ContentDisplay /> */}
       </div>

@@ -63,6 +63,9 @@ export const createDocApi = createApi({
         method: "GET",
       }),
     }),
+    getTopicById: builder.query({
+      query: (id) => `/categories/${id}`, // Fetch a single document by ID
+    }),
     deleteTopic: builder.mutation<{ success: boolean; id: string }, string>({
       query: (id) => ({
         url: `/categories/${id}`,
@@ -88,4 +91,5 @@ export const {
   useGetTopicsQuery,
   useDeleteTopicMutation,
   useLoginMutation,
+  useGetTopicByIdQuery
 } = createDocApi;
