@@ -20,26 +20,30 @@ const TopicsSideBar = ({
   isAdmin,
 }: TopicsSideBarProps) => {
   const [nodes, setNodes] = useState<Topic[]>(topics);
-  const [createTopic] = useCreateTopicMutation();
-  const [createSubTopic] = useCreateSubTopicMutation();
+  const [createTopic, { isLoading: isCreatingTopic }] =
+    useCreateTopicMutation();
+  const [createSubTopic, { isLoading: isCreatingSubtopic }] =
+    useCreateSubTopicMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newTopicName, setNewTopicName] = useState<string>("");
+  const [newTopicName, setNewTopicName] = useState<string>(""); // Ensure it's always a string
   const [currentParentId, setCurrentParentId] = useState<string | null>(null);
   const [isAddingSubTopic, setIsAddingSubTopic] = useState<boolean>(false);
 
   const handleAddSubTopic = async () => {
-    if (currentParentId && newTopicName.trim()) {
+    if (currentParentId && newTopicName !== "") {
       const newSubTopic: NewSubTopicBody = {
-        name: newTopicName.trim(),
+        name: newTopicName,
         content: "",
         parentCategoryId: currentParentId,
       };
+
       try {
         const response = await createSubTopic(newSubTopic).unwrap();
         const updatedSubTopic = {
           ...response,
-          parentCategoryId: currentParentId,
+          parentId: currentParentId,
         };
+
         const addSubTopicToNode = (
           nodes: Topic[],
           parentId: string
@@ -60,6 +64,7 @@ const TopicsSideBar = ({
             return node;
           });
         };
+
         setNodes(addSubTopicToNode(nodes, currentParentId));
         setIsModalOpen(false);
         setNewTopicName("");
@@ -72,15 +77,15 @@ const TopicsSideBar = ({
   };
 
   const handleAddTopLevelTopic = async () => {
-    if (newTopicName.trim()) {
+    if (newTopicName !== "") {
       const newTopic: NewTopicBody = {
-        name: newTopicName.trim(),
-        content: "",
+        name: newTopicName,
+        content: "", // or omit if not required
       };
 
       try {
         const response = await createTopic(newTopic).unwrap();
-        const addedTopic = { ...response, subcategories: [] }; // Ensure subcategories is always initialized
+        const addedTopic = { ...response };
 
         setNodes([...nodes, addedTopic]);
         setIsModalOpen(false);
@@ -89,7 +94,7 @@ const TopicsSideBar = ({
         console.error("Failed to create topic:", error);
       }
     } else {
-      console.error("Top-level topic creation failed: invalid data.");
+      console.error("Top level topic creation failed: invalid data.");
     }
   };
 
@@ -101,6 +106,7 @@ const TopicsSideBar = ({
     }
   };
 
+  // Open Modal for Adding SubTopic
   const handleAddSubTopicClick = (parentId: string) => {
     setCurrentParentId(parentId);
     setIsAddingSubTopic(true);
@@ -143,9 +149,14 @@ const TopicsSideBar = ({
         <TextInput
           placeholder={isAddingSubTopic ? "SubTopic Name" : "Topic Name"}
           value={newTopicName}
-          onChange={(event) => setNewTopicName(event.currentTarget.value)}
+          onChange={(event) => setNewTopicName(event.currentTarget.value || "")} // Safeguard against null/undefined
         />
-        <Button onClick={handleModalConfirm} color="green" mt="md">
+        <Button
+          onClick={handleModalConfirm}
+          color="green"
+          mt="md"
+          loading={isCreatingSubtopic || isCreatingTopic}
+        >
           Add
         </Button>
       </Modal>

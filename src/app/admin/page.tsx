@@ -32,6 +32,7 @@ type NotificationType =
 export default function Admin() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const id = searchParams.get("id");
   const [activeContent, setActiveContent] = useState<string>("");
   const [activeTopic, setActiveTopic] = useState<Topic | null>(null);
   const [deleteModalOpened, setDeleteModalOpened] = useState<boolean>(false);
@@ -48,7 +49,9 @@ export default function Admin() {
     data: topicData,
     error: contentError,
     isLoading: contentLoading,
-  } = useGetContentByIdQuery(searchParams.get("id") || "");
+  } = useGetContentByIdQuery(searchParams.get("id") || "", {
+    skip: !id,
+  });
   const [updateDoc, { isLoading: isUpdating, error: updateError }] =
     useUpdateDocMutation();
   const [deleteTopic, { isLoading: isDeleting, error: deleteError }] =
@@ -68,10 +71,13 @@ export default function Admin() {
 
   useEffect(() => {
     if (topicData) {
-      setActiveContent(topicData.content);
+      if (topicData.content) {
+        setActiveContent(topicData.content);
+        ref.current?.setMarkdown(topicData.content);
+      }
+
       setActiveTopic(topicData);
       setEditedTopicName(topicData.name);
-      ref.current?.setMarkdown(topicData.content);
     }
   }, [topicData]);
 
@@ -79,7 +85,10 @@ export default function Admin() {
     if (updateError) {
       setNotifications((prev) => [
         ...prev,
-        { type: "error", message: `Update error: ${updateError.toString()}` },
+        {
+          type: "error",
+          message: `Update error: ${updateError.toString()}`,
+        },
       ]);
     }
   }, [updateError]);
@@ -88,7 +97,10 @@ export default function Admin() {
     if (deleteError) {
       setNotifications((prev) => [
         ...prev,
-        { type: "error", message: `Delete error: ${deleteError.toString()}` },
+        {
+          type: "error",
+          message: `Delete error: ${deleteError.toString()}`,
+        },
       ]);
     }
   }, [deleteError]);
@@ -132,12 +144,15 @@ export default function Admin() {
         id: activeTopic.id,
         name: editedTopicName,
         content: markdownContent,
-        parentCategoryId: activeTopic.parentCategoryId || "",
+        parentCategoryId: activeTopic.parentId || "",
       })
         .then((response) => {
           setNotifications((prev) => [
             ...prev,
-            { type: "info", message: "Content updated successfully" },
+            {
+              type: "info",
+              message: "Content updated successfully",
+            },
           ]);
           console.log("Update response:", response);
         })
@@ -145,7 +160,10 @@ export default function Admin() {
           console.error("Update error:", err);
           setNotifications((prev) => [
             ...prev,
-            { type: "error", message: `Update error: ${err.toString()}` },
+            {
+              type: "error",
+              message: `Update error: ${err.toString()}`,
+            },
           ]);
         });
     } else {
@@ -171,7 +189,10 @@ export default function Admin() {
           console.error("Delete error:", err);
           setNotifications((prev) => [
             ...prev,
-            { type: "error", message: `Delete error: ${err.toString()}` },
+            {
+              type: "error",
+              message: `Delete error: ${err.toString()}`,
+            },
           ]);
         })
         .finally(() => {

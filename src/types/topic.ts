@@ -38,7 +38,7 @@ export interface Topic {
   id: string;
   name: string;
   content: string | null;
-  parentCategoryId?: string;
+  parentId?: string;
   subcategories?: Topic[];
 }
 
