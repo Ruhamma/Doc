@@ -8,6 +8,7 @@ interface TopicsSideBarProps {
   topics: Topic[];
   onNodeClick: (node: Topic) => void;
   isAdmin: boolean;
+  onSubCategoryClick: (sub: any) => void;
 }
 
 const TopicsSideBar = ({
