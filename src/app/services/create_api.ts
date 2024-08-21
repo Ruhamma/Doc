@@ -1,10 +1,4 @@
-import {
-  NewTopicBody,
-  Topic,
-  Tree,
-  UpdateDoc,
-  UpdatedTopic,
-} from "@/types/topic";
+import { NewTopicBody, Topic, UpdateDoc, UpdatedTopic } from "@/types/topic";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
@@ -54,6 +48,7 @@ export const createDocApi = createApi({
         method: "POST",
         body: newTopic,
       }),
+      invalidatesTags: ["doc"],
     }),
 
     updateDoc: builder.mutation<Topic, UpdateDoc>({
@@ -62,18 +57,21 @@ export const createDocApi = createApi({
         method: "PUT",
         body: { content: updateDoc.content },
       }),
+      invalidatesTags: ["doc"],
     }),
-    getTopics: builder.query<Tree[], void>({
+    getTopics: builder.query<Topic[], void>({
       query: () => ({
         url: `/categories/tree`,
         method: "GET",
       }),
+      providesTags: ["doc"],
     }),
     deleteTopic: builder.mutation<{ success: boolean; id: string }, string>({
       query: (id) => ({
         url: `/categories/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["doc"],
     }),
     login: builder.mutation<
       { access_token: string },
