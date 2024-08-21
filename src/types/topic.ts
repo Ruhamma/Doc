@@ -3,7 +3,8 @@ export interface NewTopicBody {
   content?: string;
 }
 
-interface NewSubTopicBody extends NewTopicBody {
+export interface NewSubTopicBody {
+  name: string;
   content: string;
   parentId: string;
 }

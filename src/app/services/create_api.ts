@@ -1,4 +1,5 @@
 import {
+  NewSubTopicBody,
   NewTopicBody,
   SingleTopic,
   Topic,
@@ -56,7 +57,7 @@ export const createDocApi = createApi({
       }),
       invalidatesTags: ["doc"],
     }),
-    createSubTopic: builder.mutation<Topic, NewTopicBody>({
+    createSubTopic: builder.mutation<Topic, NewSubTopicBody>({
       query: (newSubTopic) => ({
         url: "/categories",
         method: "POST",

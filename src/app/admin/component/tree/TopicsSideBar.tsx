@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Modal, TextInput, Stack } from "@mantine/core";
-import { NewTopicBody, Topic } from "@/types/topic";
+import { NewSubTopicBody, NewTopicBody, Topic } from "@/types/topic";
 import TreeNode from "./TreeNode";
 import {
   useCreateSubTopicMutation,
@@ -29,9 +29,10 @@ const TopicsSideBar = ({
 
   const handleAddSubTopic = async () => {
     if (currentParentId && newTopicName !== "") {
-      const newSubTopic: NewTopicBody = {
+      const newSubTopic: NewSubTopicBody = {
         name: newTopicName,
-        content: "", // or omit if not required
+        content: "",
+        parentId: currentParentId,
       };
 
       try {
