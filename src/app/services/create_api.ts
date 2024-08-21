@@ -1,4 +1,10 @@
-import { NewTopicBody, Topic, UpdateDoc, UpdatedTopic } from "@/types/topic";
+import {
+  NewTopicBody,
+  Topic,
+  Tree,
+  UpdateDoc,
+  UpdatedTopic,
+} from "@/types/topic";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
@@ -57,7 +63,7 @@ export const createDocApi = createApi({
         body: { content: updateDoc.content },
       }),
     }),
-    getTopics: builder.query<Topic[], void>({
+    getTopics: builder.query<Tree[], void>({
       query: () => ({
         url: `/categories/tree`,
         method: "GET",
