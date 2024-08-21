@@ -126,7 +126,7 @@ export default function Admin() {
         id: activeTopic.id,
         name: editedTopicName,
         content: markdownContent,
-        parentCategoryId: activeTopic.parentId || "", // Include parentCategoryId if applicable
+        parentCategoryId: activeTopic.parentId || "",
       })
         .then((response) => {
           setNotifications((prev) => [

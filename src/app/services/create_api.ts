@@ -48,6 +48,7 @@ export const createDocApi = createApi({
         method: "POST",
         body: newTopic,
       }),
+      invalidatesTags: ["doc"],
     }),
 
     updateDoc: builder.mutation<Topic, UpdateDoc>({
@@ -56,12 +57,14 @@ export const createDocApi = createApi({
         method: "PUT",
         body: { content: updateDoc.content },
       }),
+      invalidatesTags: ["doc"],
     }),
     getTopics: builder.query<Topic[], void>({
       query: () => ({
         url: `/categories/tree`,
         method: "GET",
       }),
+      providesTags: ["doc"],
     }),
     getTopicById: builder.query({
       query: (id) => `/categories/${id}`, // Fetch a single document by ID
@@ -71,6 +74,7 @@ export const createDocApi = createApi({
         url: `/categories/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["doc"],
     }),
     login: builder.mutation<
       { access_token: string },
