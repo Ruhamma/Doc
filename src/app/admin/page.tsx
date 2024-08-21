@@ -23,7 +23,7 @@ import {
 import SkeletonLayout from "./component/skeleton";
 import { IconDownload, IconTrash } from "@tabler/icons-react";
 import Header from "../tests/Components/Header";
-import Sidebar from "../tests/Components/Sidebar";
+import Sidebar from "./component/tree/Sidebar";
 
 type NotificationType =
   | { type: "error"; message: string }

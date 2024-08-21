@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Sidebar from "../Components/Sidebar";
+import Sidebar from "../../admin/component/tree/Sidebar";
 
 import Header from "../Components/Header";
 import TopicsSideBar from "@/app/admin/component/tree/TopicsSideBar";
