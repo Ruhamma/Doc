@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-// import { useGetT } from "@/store/api";
 import { useGetTopicByIdQuery } from "@/app/services/create_api";
 import { serializeMDX } from "@/utils/mdx";
 import { MDXRemote, MDXRemoteProps } from "next-mdx-remote";
@@ -62,6 +61,7 @@ const ContentDisplay = () => {
     error: singleDocError,
     isLoading: isSingleDocLoading,
   } = useGetTopicByIdQuery(categoryId);
+  console.log("ID data", data);
   const [mdxSource, setMdxSource] = useState<MDXRemoteProps | null>(null);
 
   useEffect(() => {

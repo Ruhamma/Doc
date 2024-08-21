@@ -23,6 +23,7 @@ import {
 import SkeletonLayout from "./component/skeleton";
 import { IconDownload, IconTrash } from "@tabler/icons-react";
 import Header from "../tests/Components/Header";
+import Sidebar from "../tests/Components/Sidebar";
 
 type NotificationType =
   | { type: "error"; message: string }
@@ -186,6 +187,7 @@ export default function Admin() {
             onNodeClick={handleNodeClick}
             isAdmin={true}
           />
+          {/* <Sidebar isAdmin={true} /> */}
 
           <Box className="editor flex-grow overflow-hidden relative">
             <Box className="editor-header p-4 bg-gray-100 border-b">
