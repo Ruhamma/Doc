@@ -36,6 +36,12 @@ export interface Topic {
   subcategories?: Topic[];
 }
 
+export interface Tree {
+  id: string;
+  name: string;
+  subcategories?: Tree[];
+}
+
 export interface UpdateDoc {
   id: string;
   content: string;
