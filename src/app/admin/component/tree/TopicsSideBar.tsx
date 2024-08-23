@@ -113,7 +113,7 @@ const TopicsSideBar = ({
   };
 
   return (
-    <div className="sidebar p-6 h-full overflow-y-auto border-r border-gray-200">
+    <div className="sidebar w-64 overflow-y-auto border-r border-gray-300 p-4">
       {nodes.map((node) => (
         <TreeNode
           key={node.id}

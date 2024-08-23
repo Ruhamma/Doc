@@ -72,23 +72,6 @@ const InitializedMDXEditor = ({
         {...props}
         ref={editorRef}
         contentEditableClassName="prose"
-        markdown={`# Welcome to Your Documentation
-
-		This is a placeholder document. You can start by writing your content here.
-		
-		## Getting Started
-		
-		- Begin by editing this document.
-		- You can add more sections and subsections as needed.
-		- Use markdown syntax to format your text, create lists, and add links.
-		
-		### Example Code Block
-		
-		\`\`\`javascript
-		// Here is an example code block
-		console.log("Hello, World!");
-		\`\`\`
-		`}
         plugins={[
           headingsPlugin(),
           listsPlugin(),

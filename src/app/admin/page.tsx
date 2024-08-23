@@ -72,8 +72,8 @@ export default function Admin() {
   useEffect(() => {
     if (topicData) {
       if (topicData.content) {
-        setActiveContent(topicData.content);
-        ref.current?.setMarkdown(topicData.content);
+        setActiveContent(topicData.content ?? "");
+        ref.current?.setMarkdown(topicData.content ?? "");
       }
 
       setActiveTopic(topicData);
@@ -222,7 +222,8 @@ export default function Admin() {
             </Notification>
           ))}
         </Box>
-        <Box className="flex flex-row h-full pt-16">
+
+        <Box className="flex flex-row h-[calc(100vh-4rem)] pt-16">
           <TopicsSideBar
             topics={topics ?? []}
             onNodeClick={handleNodeClick}
@@ -230,15 +231,25 @@ export default function Admin() {
           />
 
           <Box className="editor flex-grow overflow-hidden relative">
-            <Box className="editor-header p-4 bg-gray-100 border-b">
+            <Box className="editor-header p-4 bg-transparent border-b border-gray-200">
               <TextInput
                 value={editedTopicName}
                 onChange={handleTopicNameChange}
                 placeholder="Edit topic name"
                 size="md"
+                variant="unstyled"
+                className="px-2 py-1 rounded hover:bg-gray-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                styles={{
+                  input: {
+                    fontSize: "24px",
+                    fontWeight: "500",
+                    color: "#333",
+                    cursor: "pointer",
+                  },
+                }}
               />
             </Box>
-            <Box className="editor-content h-full overflow-y-auto">
+            <Box className="editor-content h-full overflow-y-auto p-4">
               <ForwardRefEditor
                 ref={ref}
                 markdown={activeContent}
