@@ -80,7 +80,7 @@ const TopicsSideBar = ({
     if (newTopicName !== "") {
       const newTopic: NewTopicBody = {
         name: newTopicName,
-        content: "", // or omit if not required
+        content: "",
       };
 
       try {
@@ -106,7 +106,6 @@ const TopicsSideBar = ({
     }
   };
 
-  // Open Modal for Adding SubTopic
   const handleAddSubTopicClick = (parentId: string) => {
     setCurrentParentId(parentId);
     setIsAddingSubTopic(true);

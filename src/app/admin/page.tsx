@@ -22,7 +22,7 @@ import {
   useDeleteTopicMutation,
 } from "../services/create_api";
 import SkeletonLayout from "./component/skeleton";
-import { IconDownload, IconTrash } from "@tabler/icons-react";
+import { IconDeviceFloppy, IconDownload, IconTrash } from "@tabler/icons-react";
 import Header from "../tests/Components/Header";
 
 type NotificationType =
@@ -255,7 +255,7 @@ export default function Admin() {
             onClick={handleSaveClick}
             disabled={isUpdating}
           >
-            <IconDownload size={20} />
+            <IconDeviceFloppy size={20} />
             Save
           </Button>
           <Button
@@ -293,21 +293,6 @@ export default function Admin() {
           </Group>
         </Modal>
       </div>
-
-      <Box className="fixed top-2 right-4 space-y-4">
-        {notifications.map((notification, index) => (
-          <Notification
-            key={index}
-            color={notification.type === "error" ? "red" : "green"}
-            title={notification.type === "error" ? "Error" : "Success"}
-            onClose={() =>
-              setNotifications((prev) => prev.filter((_, i) => i !== index))
-            }
-          >
-            {notification.message}
-          </Notification>
-        ))}
-      </Box>
     </Box>
   );
 }
