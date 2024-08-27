@@ -1,12 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Modal, TextInput, Stack } from "@mantine/core";
+import { Button, Modal, TextInput, Stack, Flex } from "@mantine/core";
 import { NewSubTopicBody, NewTopicBody, Topic } from "@/types/topic";
 import TreeNode from "./TreeNode";
 import {
   useCreateSubTopicMutation,
   useCreateTopicMutation,
 } from "@/app/services/create_api";
+import { IconPlus } from "@tabler/icons-react";
 
 interface TopicsSideBarProps {
   topics: Topic[];
@@ -25,7 +26,7 @@ const TopicsSideBar = ({
   const [createSubTopic, { isLoading: isCreatingSubtopic }] =
     useCreateSubTopicMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newTopicName, setNewTopicName] = useState<string>(""); // Ensure it's always a string
+  const [newTopicName, setNewTopicName] = useState<string>("");
   const [currentParentId, setCurrentParentId] = useState<string | null>(null);
   const [isAddingSubTopic, setIsAddingSubTopic] = useState<boolean>(false);
 
@@ -113,33 +114,38 @@ const TopicsSideBar = ({
   };
 
   return (
-    <div className="sidebar w-64 overflow-y-auto border-r border-gray-300 p-4">
-      {nodes.map((node) => (
-        <TreeNode
-          key={node.id}
-          node={node}
-          onNodeClick={onNodeClick}
-          onAddSubTopicClick={handleAddSubTopicClick}
-          isAdmin={isAdmin}
-        />
-      ))}
-      {isAdmin && (
-        <Stack pl={"sm"}>
+    <div className="sidebar w-64 h-full text-white p-4 shadow-lg border-r border-gray-700 flex flex-col">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg text-gray-500 font-semibold">Topics</h3>
+        {isAdmin && (
           <Button
-            className="text-white px-4 py-2 rounded shadow-md hover:bg-green-600"
+            className="bg-[#2EC150] hover:bg-[#28A946] text-white px-4 py-2 rounded shadow-md flex items-center gap-2"
             variant="filled"
             size="sm"
-            color="gray"
             onClick={() => {
               setCurrentParentId(null);
               setIsAddingSubTopic(false);
               setIsModalOpen(true);
             }}
           >
-            Add Topic
+            <IconPlus size={16} />
+            New
           </Button>
-        </Stack>
-      )}
+        )}
+      </div>
+
+      <div className="flex-1 overflow-y-auto">
+        {nodes.map((node) => (
+          <TreeNode
+            key={node.id}
+            node={node}
+            onNodeClick={onNodeClick}
+            onAddSubTopicClick={handleAddSubTopicClick}
+            isAdmin={isAdmin}
+          />
+        ))}
+      </div>
+
       <Modal
         opened={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -148,7 +154,7 @@ const TopicsSideBar = ({
         <TextInput
           placeholder={isAddingSubTopic ? "SubTopic Name" : "Topic Name"}
           value={newTopicName}
-          onChange={(event) => setNewTopicName(event.currentTarget.value || "")} // Safeguard against null/undefined
+          onChange={(event) => setNewTopicName(event.currentTarget.value || "")}
         />
         <Button
           onClick={handleModalConfirm}

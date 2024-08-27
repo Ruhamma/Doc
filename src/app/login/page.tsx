@@ -67,19 +67,27 @@ const LoginPage = () => {
   };
 
   return (
-    <BackgroundImage src={`/background.jpeg`} className="full-h">
+    <BackgroundImage
+      src={`/natural.png`}
+      className="h-screen w-screen bg-cover bg-center"
+    >
       <Flex
         gap={4}
         justify="center"
         align="center"
-        className="px-24 h-[90vh] rounded-lg"
+        className="h-[90vh] rounded-lg px-4"
       >
         <Card
-          bg={"white"}
-          className="border border-gray-300"
-          style={{ borderRadius: "12px" }}
+          className="border border-gray-300 glassmorphic-card"
+          style={{
+            borderRadius: "12px",
+            background: "rgba(255, 255, 255, 0.2)",
+            boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(10px)",
+            border: "1px solid rgba(255, 255, 255, 0.3)",
+          }}
         >
-          <div className="flex justify-start items-center">
+          <div className="flex justify-start items-center mb-4">
             <Group>
               <Link href="/">
                 <Image
@@ -91,22 +99,30 @@ const LoginPage = () => {
               </Link>
             </Group>
           </div>
-          <Flex direction="row" gap={"md"}>
-            <Group className="w-1/2 mx-auto">
+          <Flex
+            direction={{ base: "column", md: "row" }}
+            gap={{ base: "lg", md: "xl" }}
+            className="w-full"
+          >
+            <Group className="w-full md:w-1/2 mx-auto">
               <Image
                 src="/Login.svg"
                 width={453}
                 height={395}
                 alt={"Hero image"}
                 className="mx-auto"
+                style={{
+                  maxWidth: "100%",
+                  height: "auto",
+                }}
               />
             </Group>
-            <Group>
+            <Group className="w-full md:w-1/2">
               <Card
                 shadow="sm"
                 pb="xl"
-                className="border-x-green-600"
-                style={{ backgroundColor: "#8db687" }}
+                className="w-full border-x-green-600 text-white"
+                style={{ backgroundColor: "#2EC150" }}
               >
                 <Flex
                   gap={5}
@@ -114,17 +130,16 @@ const LoginPage = () => {
                   justify="center"
                   align="center"
                 >
-                  <h2 className="text-xl font-semibold mb-6 text-center">
+                  <h2 className="text-xl font-semibold mb-6 text-center text-white">
                     Login
                   </h2>
-
-                  <form onSubmit={handleSubmit(onSubmit)}>
+                  <form onSubmit={handleSubmit(onSubmit)} className="w-full">
                     <Flex direction="column" gap="lg" w="100%">
                       <TextInput
                         classNames={{
                           input:
-                            "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm",
-                          label: "block text-sm font-medium text-gray-700",
+                            "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-white placeholder-white",
+                          label: "block text-sm font-medium text-white",
                         }}
                         {...register("username")}
                         label="Username"
@@ -135,8 +150,8 @@ const LoginPage = () => {
                       <PasswordInput
                         classNames={{
                           input:
-                            "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm",
-                          label: "block text-sm font-medium text-gray-700",
+                            "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-white placeholder-white",
+                          label: "block text-sm font-medium text-white",
                         }}
                         {...register("password")}
                         label="Password"
@@ -146,7 +161,7 @@ const LoginPage = () => {
 
                       <Button
                         variant="filled"
-                        className="shadow-xl px-4"
+                        className="shadow-xl px-4 text-white"
                         size="md"
                         color="#595959"
                         type="submit"
