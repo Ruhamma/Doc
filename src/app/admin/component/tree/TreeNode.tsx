@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { ActionIcon, Button } from "@mantine/core";
 import { Topic } from "@/types/topic";
 import { IconPlus } from "@tabler/icons-react";
-import Link from "next/link";
 
 interface TreeNodeProps {
   node: Topic;
@@ -18,8 +17,6 @@ export const TreeNode = ({
   isAdmin,
 }: TreeNodeProps) => {
   const [isHovered, setIsHovered] = useState(false);
-
-  const isParentNode = node.subcategories && node.subcategories.length > 0;
 
   return (
     <div
@@ -49,10 +46,9 @@ export const TreeNode = ({
         )}
       </div>
 
-      {/* Ensure subcategories are handled safely */}
       <div className="ml-4">
         {node.subcategories &&
-          node.subcategories.length > 0 && // Check if subcategories exist and are non-empty
+          node.subcategories.length > 0 &&
           node.subcategories.map((subTopic) => (
             <TreeNode
               key={subTopic.id}
