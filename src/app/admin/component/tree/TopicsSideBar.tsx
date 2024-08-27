@@ -114,12 +114,12 @@ const TopicsSideBar = ({
   };
 
   return (
-    <div className="sidebar w-64 h-full bg-gray-800 text-white p-4 shadow-lg border-r border-gray-700 flex flex-col">
+    <div className="sidebar w-64 h-full  text-white p-4 shadow-lg border-r border-gray-700 flex flex-col">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold">Topics</h3>
+        <h3 className="text-lg text-gray-800 font-semibold">Topics</h3>
         {isAdmin && (
           <Button
-            className="bg-[#2EC150] hover:bg-[#28A946] text-white px-4 py-2 rounded shadow-md flex items-center gap-2"
+            className="hover:bg-[#28A946] text-white px-4 py-2 rounded shadow-md flex items-center gap-2"
             variant="filled"
             size="sm"
             onClick={() => {
@@ -127,6 +127,7 @@ const TopicsSideBar = ({
               setIsAddingSubTopic(false);
               setIsModalOpen(true);
             }}
+            color="#2EC150"
           >
             <IconPlus size={16} />
             New
