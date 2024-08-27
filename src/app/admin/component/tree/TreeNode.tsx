@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ActionIcon, Button } from "@mantine/core";
 import { Topic } from "@/types/topic";
 import { IconPlus } from "@tabler/icons-react";
+import Link from "next/link";
 
 interface TreeNodeProps {
   node: Topic;
@@ -17,6 +18,8 @@ export const TreeNode = ({
   isAdmin,
 }: TreeNodeProps) => {
   const [isHovered, setIsHovered] = useState(false);
+
+  const isParentNode = node.subcategories && node.subcategories.length > 0;
 
   return (
     <div
