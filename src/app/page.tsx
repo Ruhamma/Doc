@@ -2,7 +2,7 @@
 import { Button, Flex, Group, Stack } from "@mantine/core";
 
 import Image from "next/image";
-import Header from "./tests/Components/Header";
+import Header from "./categories/Components/Header";
 import Link from "next/link";
 
 import { useRouter } from "next/navigation";
@@ -42,7 +42,7 @@ export default function Home() {
               color="#2EC150"
               size="lg"
               onClick={() => {
-                router.push("/tests/2");
+                router.push("/categories/749064e7-3172-4066-ba8d-542f956e3c5c");
               }}
             >
               Get started

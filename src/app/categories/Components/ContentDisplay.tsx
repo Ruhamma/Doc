@@ -36,7 +36,9 @@ const H2 = ({ children }) => {
   );
 };
 const components = {
-  h1: ({ children }) => <h1 className="text-3xl font-bold py-6">{children}</h1>,
+  h1: ({ children }) => (
+    <h1 className="text-xl md:text-3xl font-bold py-6">{children}</h1>
+  ),
   h2: H2,
   p: ({ children }) => <p className="text-base">{children}</p>,
   code: ({ children, ...props }) => (
@@ -83,7 +85,7 @@ const ContentDisplay = () => {
   if (singleDocError) return <div>Error: {singleDocError.message}</div>;
 
   return (
-    <div className="w-3/4 h-full overflow-y-auto">
+    <div className="w-full md:w-3/4 h-full  overflow-y-auto">
       {data ? (
         <div>
           <h1 className="text-3xl font-bold mb-6">{data.name}</h1>
