@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { ActionIcon, Button } from "@mantine/core";
 import { Topic } from "@/types/topic";
 import { IconPlus } from "@tabler/icons-react";
-import Link from "next/link";
 
 interface TreeNodeProps {
   node: Topic;
@@ -19,29 +18,21 @@ export const TreeNode = ({
 }: TreeNodeProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  const isParentNode = node.subcategories && node.subcategories.length > 0;
-
   return (
     <div
       className="ml-4 mt-2 relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div items-center>
-        <Link href={`/tests/${node.id}`}>
-          <Button
-            className={`truncate max-w-[calc(100%-32px)] text-left ${
-              isParentNode
-                ? "font-bold text-black bg-yellow-200" // Temporary background color for testing
-                : "font-normal text-gray-700 bg-blue-200" // Temporary background color for testing
-            }`}
-            variant="subtle"
-            color="gray"
-            onClick={() => onNodeClick(node)}
-          >
-            {node.name}
-          </Button>
-        </Link>
+      <div>
+        <Button
+          className="truncate max-w-[calc(100%-32px)] text-left"
+          variant="subtle"
+          color="gray"
+          onClick={() => onNodeClick(node)}
+        >
+          {node.name}
+        </Button>
         {isAdmin && isHovered && (
           <ActionIcon
             key={node.id}
@@ -56,15 +47,17 @@ export const TreeNode = ({
       </div>
 
       <div className="ml-4">
-        {node.subcategories?.map((subTopic) => (
-          <TreeNode
-            key={subTopic.id}
-            node={subTopic}
-            onNodeClick={onNodeClick}
-            onAddSubTopicClick={onAddSubTopicClick}
-            isAdmin={isAdmin}
-          />
-        ))}
+        {node.subcategories &&
+          node.subcategories.length > 0 &&
+          node.subcategories.map((subTopic) => (
+            <TreeNode
+              key={subTopic.id}
+              node={subTopic}
+              onNodeClick={onNodeClick}
+              onAddSubTopicClick={onAddSubTopicClick}
+              isAdmin={isAdmin}
+            />
+          ))}
       </div>
     </div>
   );

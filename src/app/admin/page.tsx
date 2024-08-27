@@ -17,12 +17,13 @@ import TopicsSideBar from "./component/tree/TopicsSideBar";
 import { Topic } from "@/types/topic";
 import {
   useGetTopicsQuery,
+  useGetContentByIdQuery,
   useUpdateDocMutation,
   useDeleteTopicMutation,
 } from "../services/create_api";
 import SkeletonLayout from "./component/skeleton";
 import { IconDownload, IconTrash } from "@tabler/icons-react";
-import Header from "../categories/Components/Header";
+import Header from "../tests/Components/Header";
 import Sidebar from "./component/tree/Sidebar";
 
 type NotificationType =
@@ -32,6 +33,7 @@ type NotificationType =
 export default function Admin() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const id = searchParams.get("id");
   const [activeContent, setActiveContent] = useState<string>("");
   const [activeTopic, setActiveTopic] = useState<Topic | null>(null);
   const [deleteModalOpened, setDeleteModalOpened] = useState<boolean>(false);
@@ -39,30 +41,55 @@ export default function Admin() {
   const [editedTopicName, setEditedTopicName] = useState<string>(""); // State for topic name
   const ref = useRef<MDXEditorMethods>(null);
 
-  const { data: topics, error, isLoading } = useGetTopicsQuery();
+  const {
+    data: topics,
+    error: topicsError,
+    isLoading: topicsLoading,
+  } = useGetTopicsQuery();
+  const {
+    data: topicData,
+    error: contentError,
+    isLoading: contentLoading,
+  } = useGetContentByIdQuery(searchParams.get("id") || "", {
+    skip: !id,
+  });
   const [updateDoc, { isLoading: isUpdating, error: updateError }] =
     useUpdateDocMutation();
   const [deleteTopic, { isLoading: isDeleting, error: deleteError }] =
     useDeleteTopicMutation();
 
   useEffect(() => {
-    const nodeId = searchParams.get("id");
-    if (nodeId && topics) {
-      const topicNode = findNodeById(topics, nodeId);
-      if (topicNode && ref.current) {
-        ref.current.setMarkdown(topicNode.content || "");
-        setActiveContent(topicNode.content || "");
-        setActiveTopic(topicNode);
-        setEditedTopicName(topicNode.name || ""); // Set the topic name
+    const timers = notifications.map((_, index) =>
+      setTimeout(() => {
+        setNotifications((prev) => prev.filter((_, i) => i !== index));
+      }, 5000)
+    );
+
+    return () => {
+      timers.forEach((timer) => clearTimeout(timer));
+    };
+  }, [notifications]);
+
+  useEffect(() => {
+    if (topicData) {
+      if (topicData.content) {
+        setActiveContent(topicData.content ?? "");
+        ref.current?.setMarkdown(topicData.content ?? "");
       }
+
+      setActiveTopic(topicData);
+      setEditedTopicName(topicData.name);
     }
-  }, [searchParams, topics]);
+  }, [topicData]);
 
   useEffect(() => {
     if (updateError) {
       setNotifications((prev) => [
         ...prev,
-        { type: "error", message: `Update error: ${updateError.toString()}` },
+        {
+          type: "error",
+          message: `Update error: ${updateError.toString()}`,
+        },
       ]);
     }
   }, [updateError]);
@@ -71,21 +98,27 @@ export default function Admin() {
     if (deleteError) {
       setNotifications((prev) => [
         ...prev,
-        { type: "error", message: `Delete error: ${deleteError.toString()}` },
+        {
+          type: "error",
+          message: `Delete error: ${deleteError.toString()}`,
+        },
       ]);
     }
   }, [deleteError]);
 
   useEffect(() => {
-    if (error) {
+    if (topicsError) {
       setNotifications((prev) => [
         ...prev,
-        { type: "error", message: `Data fetch error: ${error.toString()}` },
+        {
+          type: "error",
+          message: `Data fetch error: ${topicsError.toString()}`,
+        },
       ]);
     }
-  }, [error]);
+  }, [topicsError]);
 
-  if (isLoading) {
+  if (topicsLoading || contentLoading) {
     return <SkeletonLayout />;
   }
 
@@ -104,21 +137,6 @@ export default function Admin() {
     setEditedTopicName(event.currentTarget.value);
   };
 
-  const findNodeById = (nodes: Topic[], id: string): Topic | null => {
-    for (let topicNode of nodes) {
-      if (topicNode.id === id) {
-        return topicNode;
-      }
-      if (topicNode.subcategories) {
-        const foundNode = findNodeById(topicNode.subcategories, id);
-        if (foundNode) {
-          return foundNode;
-        }
-      }
-    }
-    return null;
-  };
-
   const handleSaveClick = () => {
     if (activeTopic) {
       const markdownContent = ref.current?.getMarkdown() || "";
@@ -132,7 +150,10 @@ export default function Admin() {
         .then((response) => {
           setNotifications((prev) => [
             ...prev,
-            { type: "info", message: "Content updated successfully" },
+            {
+              type: "info",
+              message: "Content updated successfully",
+            },
           ]);
           console.log("Update response:", response);
         })
@@ -140,7 +161,10 @@ export default function Admin() {
           console.error("Update error:", err);
           setNotifications((prev) => [
             ...prev,
-            { type: "error", message: `Update error: ${err.toString()}` },
+            {
+              type: "error",
+              message: `Update error: ${err.toString()}`,
+            },
           ]);
         });
     } else {
@@ -166,7 +190,10 @@ export default function Admin() {
           console.error("Delete error:", err);
           setNotifications((prev) => [
             ...prev,
-            { type: "error", message: `Delete error: ${err.toString()}` },
+            {
+              type: "error",
+              message: `Delete error: ${err.toString()}`,
+            },
           ]);
         })
         .finally(() => {
@@ -181,7 +208,23 @@ export default function Admin() {
         <Header />
       </Box>
       <div className="p-10s">
-        <Box className="flex flex-row h-full pt-16">
+        <Box className="fixed top-16 right-4 z-50 space-y-4">
+          {notifications.map((notification, index) => (
+            <Notification
+              key={index}
+              color={notification.type === "error" ? "red" : "green"}
+              title={notification.type === "error" ? "Error" : "Success"}
+              onClose={() =>
+                setNotifications((prev) => prev.filter((_, i) => i !== index))
+              }
+              withCloseButton
+            >
+              {notification.message}
+            </Notification>
+          ))}
+        </Box>
+
+        <Box className="flex flex-row h-[calc(100vh-4rem)] pt-16">
           <TopicsSideBar
             topics={topics ?? []}
             onNodeClick={handleNodeClick}
@@ -190,15 +233,25 @@ export default function Admin() {
           {/* <Sidebar isAdmin={true} /> */}
 
           <Box className="editor flex-grow overflow-hidden relative">
-            <Box className="editor-header p-4 bg-gray-100 border-b">
+            <Box className="editor-header p-4 bg-transparent border-b border-gray-200">
               <TextInput
                 value={editedTopicName}
                 onChange={handleTopicNameChange}
                 placeholder="Edit topic name"
                 size="md"
+                variant="unstyled"
+                className="px-2 py-1 rounded hover:bg-gray-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                styles={{
+                  input: {
+                    fontSize: "24px",
+                    fontWeight: "500",
+                    color: "#333",
+                    cursor: "pointer",
+                  },
+                }}
               />
             </Box>
-            <Box className="editor-content h-full overflow-y-auto">
+            <Box className="editor-content h-full overflow-y-auto p-4">
               <ForwardRefEditor
                 ref={ref}
                 markdown={activeContent}
@@ -215,7 +268,7 @@ export default function Admin() {
             onClick={handleSaveClick}
             disabled={isUpdating}
           >
-            <IconDownload size={20} />
+            <IconDeviceFloppy size={20} />
             Save
           </Button>
           <Button
@@ -253,20 +306,6 @@ export default function Admin() {
           </Group>
         </Modal>
       </div>
-
-      {notifications.map((notification, index) => (
-        <Notification
-          key={index}
-          color={notification.type === "error" ? "red" : "green"}
-          title={notification.type === "error" ? "Error" : "Success"}
-          onClose={() =>
-            setNotifications((prev) => prev.filter((_, i) => i !== index))
-          }
-          className="fixed right-4 bottom-4"
-        >
-          {notification.message}
-        </Notification>
-      ))}
     </Box>
   );
 }
