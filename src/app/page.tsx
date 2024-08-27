@@ -18,7 +18,7 @@ export default function Home() {
     <main className="">
       <Header />
       <Flex
-        gap={4}
+        gap={2}
         justify="center"
         align="center"
         direction="row"
