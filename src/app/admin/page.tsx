@@ -22,8 +22,8 @@ import {
   useDeleteTopicMutation,
 } from "../services/create_api";
 import SkeletonLayout from "./component/skeleton";
-import { IconDownload, IconTrash } from "@tabler/icons-react";
-import Header from "../tests/Components/Header";
+import { IconDeviceFloppy, IconDownload, IconTrash } from "@tabler/icons-react";
+import Header from "../categories/Components/Header";
 import Sidebar from "./component/tree/Sidebar";
 
 type NotificationType =
