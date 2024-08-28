@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { useGetTopicByIdQuery } from "@/app/services/create_api";
+import { useGetContentByIdQuery } from "@/app/services/create_api";
 import { serializeMDX } from "@/utils/mdx";
 import { MDXRemote, MDXRemoteProps } from "next-mdx-remote";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -9,7 +9,19 @@ import { dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { useTheme } from "next-themes";
 import H2Extractor from "./H2";
 
-const customStyle = (isDarkMode: boolean) => ({
+// Define a type for the custom style function
+type CustomStyle = {
+  backgroundColor: string;
+  borderRadius: string;
+  padding: string;
+  margin: string;
+  overflowX: string;
+  width: string;
+  borderColor: string;
+};
+
+// Adjust the custom style function to return the correct type
+const customStyle = (isDarkMode: boolean): CustomStyle => ({
   backgroundColor: "rgba(138, 154, 91, 0.1)",
   borderRadius: "8px",
   padding: "1em",
@@ -20,8 +32,9 @@ const customStyle = (isDarkMode: boolean) => ({
 });
 
 let h2Counter = 0;
-const H2 = ({ children }) => {
-  const [id, setId] = useState("");
+
+const H2: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [id, setId] = useState<string>("");
 
   useEffect(() => {
     h2Counter += 1;
@@ -35,24 +48,38 @@ const H2 = ({ children }) => {
     </h3>
   );
 };
+
+// Define types for custom MDX components
 const components = {
-  h1: ({ children }) => <h1 className="text-3xl font-bold py-6">{children}</h1>,
+  h1: ({ children }: { children: React.ReactNode }) => (
+    <h1 className="text-xl md:text-3xl font-bold py-6">{children}</h1>
+  ),
   h2: H2,
-  p: ({ children }) => <p className="text-base">{children}</p>,
-  code: ({ children, ...props }) => (
+  p: ({ children }: { children: React.ReactNode }) => (
+    <p className="text-base">{children}</p>
+  ),
+  code: ({
+    children,
+    ...props
+  }: {
+    children: string;
+    language?: string;
+    isDarkMode?: boolean;
+  }) => (
     <SyntaxHighlighter
       language={props.language || "javascript"}
       style={props.isDarkMode ? dark : coy}
-      customStyle={customStyle(props.isDarkMode)}
+      customStyle={customStyle(props.isDarkMode || false)}
     >
       {children}
     </SyntaxHighlighter>
   ),
 };
 
-const ContentDisplay = () => {
+const ContentDisplay: React.FC = () => {
   const pathname = usePathname();
-  const categoryId = pathname.split("/").pop();
+  const categoryId = pathname ? pathname.split("/").pop() : "";
+
   const { theme } = useTheme();
   const isDarkMode = theme === "dark";
 
@@ -60,8 +87,8 @@ const ContentDisplay = () => {
     data,
     error: singleDocError,
     isLoading: isSingleDocLoading,
-  } = useGetTopicByIdQuery(categoryId);
-  console.log("ID data", data);
+  } = useGetContentByIdQuery(categoryId || "");
+
   const [mdxSource, setMdxSource] = useState<MDXRemoteProps | null>(null);
 
   useEffect(() => {
@@ -83,7 +110,7 @@ const ContentDisplay = () => {
   if (singleDocError) return <div>Error: {singleDocError.message}</div>;
 
   return (
-    <div className="w-3/4 h-full overflow-y-auto">
+    <div className="w-full p-4 md:w-3/4 h-full overflow-y-auto">
       {data ? (
         <div>
           <h1 className="text-3xl font-bold mb-6">{data.name}</h1>
@@ -97,11 +124,8 @@ const ContentDisplay = () => {
           </div>
         </div>
       ) : (
-        <p className="text-white">Select a category to see its content.</p>
+        <p>Select a category to see its content.</p>
       )}
-      {/* <h1 className="my-[400px]" id="h2-5">
-        heyyy
-      </h1> */}
     </div>
   );
 };

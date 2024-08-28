@@ -23,6 +23,8 @@ const Sidebar = ({ isAdmin }: SidebarProps) => {
     null
   );
 
+  const handleClick = (data : any) => { console.log(data.id, "clicked") }
+
   return (
     <div className="w-[300px] h-full border-b border-gray-200 dark:border-gray-700 pl-8 pr-8 overflow-y-auto">
       {isAllDataLoading ? (
@@ -39,9 +41,10 @@ const Sidebar = ({ isAdmin }: SidebarProps) => {
                 className="relative flex items-center"
               >
                 <Link
-                  href={`/tests/${dat.id}`}
+                  href={`/categories/${dat.id}`}
                   passHref
                   className="hover:text-[#20CB0C] capitalize font-bold text-[18px] p-2 block"
+                  onClick={handleClick(dat)}
                 >
                   {dat.name}
                 </Link>
@@ -67,7 +70,7 @@ const Sidebar = ({ isAdmin }: SidebarProps) => {
                         className="relative flex items-center gap-4"
                       >
                         <Link
-                          href={`/tests/${sub.id}`}
+                          href={`/categories/${sub.id}`}
                           passHref
                           className="hover:text-[#20CB0C] normal-case pl-10 py-1 text-[16px] block"
                         >

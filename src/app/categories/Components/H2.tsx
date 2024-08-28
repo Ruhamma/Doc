@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useGetTopicByIdQuery } from "@/app/services/create_api";
+import { useGetContentByIdQuery } from "@/app/services/create_api";
 const H2Extractor: React.FC = () => {
   const pathname = usePathname();
   const categoryId = pathname.split("/").pop();
-  const { data, error, isLoading } =  useGetTopicByIdQuery (categoryId);
+  const { data, error, isLoading } =  useGetContentByIdQuery(categoryId);
   const [h2List, setH2List] = useState<{ id: string; text: string }[]>([]);
   const router = useRouter();
 
