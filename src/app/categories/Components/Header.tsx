@@ -7,6 +7,9 @@ import Link from "next/link";
 import { Burger } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Sidebar from "@/app/admin/component/tree/Sidebar";
+import TopicsSideBar from "@/app/admin/component/tree/TopicsSideBar";
+import { Topic } from "@/types/topic";
+import { useGetTopicsQuery } from "@/app/services/create_api";
 
 const links = [
   { link: "/about", label: "Features" },
@@ -19,6 +22,10 @@ const Header = () => {
   const [opened, { toggle }] = useDisclosure(false);
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
+  const { data: topics, error, isLoading } = useGetTopicsQuery();
+  const handleNodeClick = (node: Topic) => {
+    console.log(node);
+  };
 
   useEffect(() => setMounted(true), []);
 
@@ -109,15 +116,11 @@ const Header = () => {
             onClick={toggle}
             className="flex flex-col items-left justify-center gap-4 3xl:gap-6 pt-4 border h-screen w-full bg-white dark:bg-[#172c21] opacity-100 "
           >
-            <Sidebar
-              onCategoryClick={function (categoryId: string): void {
-                throw new Error("Function not implemented.");
-              }}
-              onSubCategoryClick={function (sub: any): void {
-                throw new Error("Function not implemented.");
-              }}
-              isAdmin={false}
-            />
+               <TopicsSideBar
+            topics={topics ?? []}
+            onNodeClick={handleNodeClick}
+            isAdmin={false}
+          />
           </Flex>
         </div>
       </Collapse>

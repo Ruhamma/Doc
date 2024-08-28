@@ -26,12 +26,12 @@ const Page = () => {
       <div className="flex p-4 md:p-0 md:pt-8 ">
         <div className=" hidden md:flex ">
           {/* <Sidebar isAdmin={false} /> */}
+          <TopicsSideBar
+            topics={topics ?? []}
+            onNodeClick={handleNodeClick}
+            isAdmin={false}
+          />
         </div>
-        <TopicsSideBar
-          topics={topics ?? []}
-          onNodeClick={handleNodeClick}
-          isAdmin={false}
-        />
 
         <ContentDisplay />
       </div>
