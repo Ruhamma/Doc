@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ActionIcon, Button } from "@mantine/core";
 import { Topic } from "@/types/topic";
 import { IconPlus } from "@tabler/icons-react";
+import Link from "next/link";
 
 interface TreeNodeProps {
   node: Topic;
@@ -24,7 +25,7 @@ export const TreeNode = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div>
+      <Link href={`/categories/${node.id}`}>
         <Button
           className="truncate max-w-[calc(100%-32px)] text-left"
           variant="subtle"
@@ -33,19 +34,18 @@ export const TreeNode = ({
         >
           {node.name}
         </Button>
-        {isAdmin && isHovered && (
-          <ActionIcon
-            key={node.id}
-            variant="subtle"
-            color="green"
-            className="absolute right-0 top-0"
-            onClick={() => onAddSubTopicClick(node.id)}
-          >
-            <IconPlus size={16} stroke={1.5} />
-          </ActionIcon>
-        )}
-      </div>
-
+      </Link>
+      {isAdmin && isHovered && (
+        <ActionIcon
+          key={node.id}
+          variant="subtle"
+          color="green"
+          className="absolute right-0 top-0"
+          onClick={() => onAddSubTopicClick(node.id)}
+        >
+          <IconPlus size={16} stroke={1.5} />
+        </ActionIcon>
+      )}
       <div className="ml-4">
         {node.subcategories &&
           node.subcategories.length > 0 &&

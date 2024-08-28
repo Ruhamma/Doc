@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { useGetTopicByIdQuery } from "@/app/services/create_api";
+import { useGetContentByIdQuery } from "@/app/services/create_api";
 import { serializeMDX } from "@/utils/mdx";
 import { MDXRemote, MDXRemoteProps } from "next-mdx-remote";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -62,7 +62,7 @@ const ContentDisplay = () => {
     data,
     error: singleDocError,
     isLoading: isSingleDocLoading,
-  } = useGetTopicByIdQuery(categoryId);
+  } = useGetContentByIdQuery(categoryId);
   console.log("ID data", data);
   const [mdxSource, setMdxSource] = useState<MDXRemoteProps | null>(null);
 
