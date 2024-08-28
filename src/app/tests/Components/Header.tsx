@@ -33,7 +33,7 @@ const Header = () => {
   ));
 
   return (
-    <header className="p-4 px-10 border-b border-gray-200 dark:border-gray-800 sticky bg-white dark:bg-[#172c21] dark:text-white">
+    <header className="p-2 px-10 border-b border-gray-200 dark:border-gray-800 sticky bg-white dark:bg-[#172c21] dark:text-white">
       <div className="flex justify-between items-center">
         <Group>
           <Link href="/">

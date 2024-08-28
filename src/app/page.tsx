@@ -54,7 +54,7 @@ export default function Home() {
               color="#595959"
               onClick={handleSecondaryButtonClick}
             >
-              Secondary
+              Add new
             </Button>
           </Group>
         </Group>

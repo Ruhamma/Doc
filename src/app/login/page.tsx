@@ -19,6 +19,19 @@ import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useLoginMutation } from "../services/create_api";
 
+const inputStyles = {
+  input: {
+    backgroundColor: "rgba(0, 0, 0, 0.25)", // Less transparent background
+    color: "white", // White text color
+    borderColor: "rgba(0, 0, 0, 0.1)", // Semi-transparent black border color
+    "::placeholder": {
+      color: "#ffffff", // White placeholder color
+    },
+  },
+  label: {
+    color: "white", // White label color
+  },
+};
 const schema = z.object({
   username: z
     .string()
@@ -69,7 +82,7 @@ const LoginPage = () => {
   return (
     <BackgroundImage
       src={`/natural.png`}
-      className="h-screen w-screen bg-cover bg-center"
+      className="h-screen w-screen bg-cover bg-center relative"
     >
       <Flex
         gap={4}
@@ -81,30 +94,29 @@ const LoginPage = () => {
           className="border border-gray-300 glassmorphic-card"
           style={{
             borderRadius: "12px",
-            background: "rgba(255, 255, 255, 0.2)",
+            background: "rgba(255, 255, 255, 0.3)",
             boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
             backdropFilter: "blur(10px)",
             border: "1px solid rgba(255, 255, 255, 0.3)",
           }}
         >
-          <div className="flex justify-start items-center mb-4">
-            <Group>
-              <Link href="/">
-                <Image
-                  src={`/logo.svg`}
-                  alt="perago logo"
-                  width="110"
-                  height="30"
-                />
-              </Link>
-            </Group>
-          </div>
           <Flex
             direction={{ base: "column", md: "row" }}
             gap={{ base: "lg", md: "xl" }}
             className="w-full"
           >
             <Group className="w-full md:w-1/2 mx-auto">
+              <Group>
+                <Link href="/">
+                  <Image
+                    src={`/logo.svg`}
+                    alt="perago logo"
+                    width="110"
+                    height="30"
+                  />
+                </Link>
+              </Group>
+
               <Image
                 src="/Login.svg"
                 width={453}
@@ -120,9 +132,14 @@ const LoginPage = () => {
             <Group className="w-full md:w-1/2">
               <Card
                 shadow="sm"
-                pb="xl"
-                className="w-full border-x-green-600 text-white"
-                style={{ backgroundColor: "#2EC150" }}
+                className="w-full h-full flex flex-col border-x-green-600 text-white"
+                style={{
+                  borderRadius: "12px",
+                  background: "rgba(0, 0, 0, 0.4)",
+                  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+                  backdropFilter: "blur(10px)",
+                  border: "1px solid rgba(255, 255, 255, 0.3)",
+                }}
               >
                 <Flex
                   gap={5}
@@ -130,7 +147,7 @@ const LoginPage = () => {
                   justify="center"
                   align="center"
                 >
-                  <h2 className="text-xl font-semibold mb-6 text-center text-white">
+                  <h2 className="text-xl p-4 font-semibold mb-6 text-center text-white">
                     Login
                   </h2>
                   <form onSubmit={handleSubmit(onSubmit)} className="w-full">
@@ -138,9 +155,10 @@ const LoginPage = () => {
                       <TextInput
                         classNames={{
                           input:
-                            "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-white placeholder-white",
-                          label: "block text-sm font-medium text-white",
+                            "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm",
+                          label: "block text-sm font-medium",
                         }}
+                        styles={inputStyles}
                         {...register("username")}
                         label="Username"
                         placeholder="Enter your Username"
@@ -150,9 +168,10 @@ const LoginPage = () => {
                       <PasswordInput
                         classNames={{
                           input:
-                            "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-white placeholder-white",
-                          label: "block text-sm font-medium text-white",
+                            "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm",
+                          label: "block text-sm font-medium",
                         }}
+                        styles={inputStyles}
                         {...register("password")}
                         label="Password"
                         placeholder="Enter your password"
@@ -161,9 +180,9 @@ const LoginPage = () => {
 
                       <Button
                         variant="filled"
-                        className="shadow-xl px-4 text-white"
+                        className="shadow-xl text-white mt-8"
                         size="md"
-                        color="#595959"
+                        color="#2EC150"
                         type="submit"
                         disabled={isLoading}
                       >

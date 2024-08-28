@@ -38,7 +38,7 @@ export default function Admin() {
   const [activeTopic, setActiveTopic] = useState<Topic | null>(null);
   const [deleteModalOpened, setDeleteModalOpened] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
-  const [editedTopicName, setEditedTopicName] = useState<string>(""); // State for topic name
+  const [editedTopicName, setEditedTopicName] = useState<string>("");
   const ref = useRef<MDXEditorMethods>(null);
 
   const {
@@ -230,7 +230,6 @@ export default function Admin() {
             onNodeClick={handleNodeClick}
             isAdmin={true}
           />
-          {/* <Sidebar isAdmin={true} /> */}
 
           <Box className="editor flex-grow overflow-hidden relative">
             <Box className="editor-header p-4 bg-transparent border-b border-gray-200">

@@ -11,9 +11,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const baseQuery = fetchBaseQuery({
   baseUrl: "https://nest-docs-2.onrender.com",
   prepareHeaders: (headers) => {
-    // Retrieve the token from local storage
     const token = localStorage.getItem("authToken");
-    // If a token is available, add it to the headers
+
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
     }
