@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Modal, TextInput, Stack } from "@mantine/core";
+import { Button, Modal, TextInput, Stack, Skeleton } from "@mantine/core";
 import { NewSubTopicBody, NewTopicBody, Topic } from "@/types/topic";
 import TreeNode from "./TreeNode";
 import {
@@ -115,7 +115,7 @@ const TopicsSideBar = ({
   };
 
   return (
-    <div className=" w-[300px] p-6 h-full overflow-y-auto border-r border-gray-200">
+    <div className="w-full md:w-[300px] p-6 h-full overflow-y-auto border-r border-gray-200">
       {nodes.map((node) => (
         <TreeNode
           key={node.id}

@@ -1,15 +1,28 @@
 "use client";
 import React, { useState } from "react";
 import Sidebar from "../../admin/component/tree/Sidebar";
-
+import SkeletonLayout from "@/app/admin/component/skeleton";
 import Header from "../Components/Header";
 import TopicsSideBar from "@/app/admin/component/tree/TopicsSideBar";
 import { Topic } from "@/types/topic";
 import { useGetTopicsQuery } from "@/app/services/create_api";
 import ContentDisplay from "../Components/ContentDisplay";
+import { Skeleton, Box } from "@mantine/core";
 
 const Page = () => {
   const { data: topics, error, isLoading } = useGetTopicsQuery();
+
+  if (isLoading) {
+    return (
+      <Box className="p-4 bg-gray-100">
+      <Skeleton height={32} radius="xl" />
+      <Skeleton height={32} mt={6} radius="xl" />
+      <Skeleton height={32} mt={6} width="70%" radius="xl" />
+      <Skeleton height={32} mt={6} radius="xl" />
+      <Skeleton height={32} mt={6} width="50%" radius="xl" />
+    </Box>
+    );
+  }
 
   const handleNodeClick = (node: Topic) => {
     console.log(node);
@@ -26,12 +39,12 @@ const Page = () => {
       <div className="flex p-4 md:p-0 md:pt-8 ">
         <div className=" hidden md:flex ">
           {/* <Sidebar isAdmin={false} /> */}
+          <TopicsSideBar
+            topics={topics ?? []}
+            onNodeClick={handleNodeClick}
+            isAdmin={false}
+          />
         </div>
-        <TopicsSideBar
-          topics={topics ?? []}
-          onNodeClick={handleNodeClick}
-          isAdmin={false}
-        />
 
         <ContentDisplay />
       </div>
