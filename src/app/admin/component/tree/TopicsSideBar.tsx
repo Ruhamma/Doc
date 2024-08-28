@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Modal, TextInput, Stack } from "@mantine/core";
+import { Button, Modal, TextInput, Stack, Skeleton } from "@mantine/core";
 import { NewSubTopicBody, NewTopicBody, Topic } from "@/types/topic";
 import TreeNode from "./TreeNode";
 import {
