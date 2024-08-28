@@ -115,7 +115,7 @@ const TopicsSideBar = ({
   };
 
   return (
-    <div className="sidebar p-6 h-full overflow-y-auto border-r border-gray-200">
+    <div className=" w-[300px] p-6 h-full overflow-y-auto border-r border-gray-200">
       {nodes.map((node) => (
         <TreeNode
           key={node.id}

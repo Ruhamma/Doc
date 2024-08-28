@@ -9,6 +9,7 @@ interface TreeNodeProps {
   onNodeClick: (node: Topic) => void;
   onAddSubTopicClick: (parentId: string) => void;
   isAdmin: boolean;
+  level?: number;
 }
 
 export const TreeNode = ({
@@ -16,8 +17,10 @@ export const TreeNode = ({
   onNodeClick,
   onAddSubTopicClick,
   isAdmin,
+  level = 0,
 }: TreeNodeProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const isParentNode = level === 0;
 
   return (
     <div
@@ -26,14 +29,16 @@ export const TreeNode = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       <Link href={`/categories/${node.id}`}>
-        <Button
-          className="truncate max-w-[calc(100%-32px)] text-left"
-          variant="subtle"
-          color="gray"
+        <div
+          className={`truncate max-w-[calc(100%-32px)] text-left cursor-pointer ${
+            isParentNode
+              ? "hover:text-[#20CB0C] capitalize font-bold text-[18px] block"
+              : "hover:text-[#20CB0C] normal-case pl-2 py-1 text-[16px] block"
+          }`}
           onClick={() => onNodeClick(node)}
         >
           {node.name}
-        </Button>
+        </div>
       </Link>
       {isAdmin && isHovered && (
         <ActionIcon
@@ -56,6 +61,7 @@ export const TreeNode = ({
               onNodeClick={onNodeClick}
               onAddSubTopicClick={onAddSubTopicClick}
               isAdmin={isAdmin}
+              level={level + 1}
             />
           ))}
       </div>
