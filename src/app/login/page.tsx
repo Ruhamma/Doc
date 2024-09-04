@@ -21,15 +21,15 @@ import { useLoginMutation } from "../services/create_api";
 
 const inputStyles = {
   input: {
-    backgroundColor: "rgba(0, 0, 0, 0.25)", // Less transparent background
-    color: "white", // White text color
-    borderColor: "rgba(0, 0, 0, 0.1)", // Semi-transparent black border color
+    backgroundColor: "rgba(0, 0, 0, 0.25)",
+    color: "black",
+    borderColor: "rgba(0, 0, 0, 0.1)",
     "::placeholder": {
-      color: "#ffffff", // White placeholder color
+      color: "#ffffff",
     },
   },
   label: {
-    color: "white", // White label color
+    color: "black", // White label color
   },
 };
 const schema = z.object({
@@ -80,10 +80,7 @@ const LoginPage = () => {
   };
 
   return (
-    <BackgroundImage
-      src={`/natural.png`}
-      className="h-screen w-screen bg-cover bg-center relative"
-    >
+    <div>
       <Flex
         gap={4}
         justify="center"
@@ -133,13 +130,6 @@ const LoginPage = () => {
               <Card
                 shadow="sm"
                 className="w-full h-full flex flex-col border-x-green-600 text-white"
-                style={{
-                  borderRadius: "12px",
-                  background: "rgba(0, 0, 0, 0.4)",
-                  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-                  backdropFilter: "blur(10px)",
-                  border: "1px solid rgba(255, 255, 255, 0.3)",
-                }}
               >
                 <Flex
                   gap={5}
@@ -147,7 +137,7 @@ const LoginPage = () => {
                   justify="center"
                   align="center"
                 >
-                  <h2 className="text-xl p-4 font-semibold mb-6 text-center text-white">
+                  <h2 className="text-xl p-4 font-semibold mb-6 text-center text-gray-600">
                     Login
                   </h2>
                   <form onSubmit={handleSubmit(onSubmit)} className="w-full">
@@ -205,7 +195,7 @@ const LoginPage = () => {
           </Flex>
         </Card>
       </Flex>
-    </BackgroundImage>
+    </div>
   );
 };
 

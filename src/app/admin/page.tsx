@@ -11,7 +11,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { MDXEditorMethods } from "@mdxeditor/editor";
-import { ForwardRefEditor } from "./component/mdxeditor/ForwardRefEditor";
+
 import { useRouter, useSearchParams } from "next/navigation";
 import TopicsSideBar from "./component/tree/TopicsSideBar";
 import { Topic } from "@/types/topic";
@@ -22,9 +22,9 @@ import {
   useDeleteTopicMutation,
 } from "../services/create_api";
 import SkeletonLayout from "./component/skeleton";
-import { IconDeviceFloppy, IconDownload, IconTrash } from "@tabler/icons-react";
+import { IconDeviceFloppy, IconTrash } from "@tabler/icons-react";
 import Header from "../tests/Components/Header";
-import Sidebar from "./component/tree/Sidebar";
+import { ForwardRefEditor } from "./component/mdxeditor/ForwardRefEditor";
 
 type NotificationType =
   | { type: "error"; message: string }
@@ -57,6 +57,14 @@ export default function Admin() {
     useUpdateDocMutation();
   const [deleteTopic, { isLoading: isDeleting, error: deleteError }] =
     useDeleteTopicMutation();
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      router.push("/login");
+    }
+  }, [router]);
 
   useEffect(() => {
     const timers = notifications.map((_, index) =>
@@ -118,7 +126,7 @@ export default function Admin() {
     }
   }, [topicsError]);
 
-  if (topicsLoading || contentLoading) {
+  if (!localStorage.getItem("authToken") || topicsLoading || contentLoading) {
     return <SkeletonLayout />;
   }
 
@@ -299,8 +307,14 @@ export default function Admin() {
             >
               Cancel
             </Button>
-            <Button color="red" onClick={confirmDelete} loading={isDeleting}>
-              Delete
+            <Button
+              className="text-white px-4 py-2 rounded shadow-md hover:bg-red-600"
+              variant="filled"
+              color="red"
+              onClick={confirmDelete}
+              disabled={isDeleting}
+            >
+              Confirm
             </Button>
           </Group>
         </Modal>
