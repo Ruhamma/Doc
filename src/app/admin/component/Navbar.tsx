@@ -2,8 +2,11 @@ import React from "react";
 import Image from "next/image";
 import logo from "../../../../public/Pisdoc.svg";
 import { IconSearch, IconMoon } from "@tabler/icons-react";
+import { Burger } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 
 function Navbar() {
+  const [opened, { toggle }] = useDisclosure(false);
   return (
     <div className="w-full justify-between flex fixed h-16 bg-white shadow-lg px-8 ">
       <div className="flex items-center">
@@ -24,6 +27,15 @@ function Navbar() {
         <div className="flex border border-gray-300 rounded-md p-2">
           <IconMoon className="text-gray-400" />
         </div>
+        <Burger
+          opened={opened}
+          onClick={toggle}
+          // hiddenFrom="md"
+          size="45px"
+          color="#bea632"
+          className=" 3xl:h-[60px] 3xl:w-[60px] fixed top-4 right-[10px]  xl:right-[115px] 3xl:right-[155px]"
+          //style={}
+        />
       </div>
     </div>
   );
