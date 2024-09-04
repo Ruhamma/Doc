@@ -1,13 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Modal, TextInput, Stack, Skeleton } from "@mantine/core";
+import { Button, Modal, TextInput, Stack, Flex } from "@mantine/core";
 import { NewSubTopicBody, NewTopicBody, Topic } from "@/types/topic";
 import TreeNode from "./TreeNode";
 import {
   useCreateSubTopicMutation,
   useCreateTopicMutation,
 } from "@/app/services/create_api";
-import Link from "next/link";
+import { IconPlus } from "@tabler/icons-react";
 
 interface TopicsSideBarProps {
   topics: Topic[];
@@ -26,7 +26,7 @@ const TopicsSideBar = ({
   const [createSubTopic, { isLoading: isCreatingSubtopic }] =
     useCreateSubTopicMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newTopicName, setNewTopicName] = useState<string>(""); // Ensure it's always a string
+  const [newTopicName, setNewTopicName] = useState<string>("");
   const [currentParentId, setCurrentParentId] = useState<string | null>(null);
   const [isAddingSubTopic, setIsAddingSubTopic] = useState<boolean>(false);
 
@@ -81,7 +81,7 @@ const TopicsSideBar = ({
     if (newTopicName !== "") {
       const newTopic: NewTopicBody = {
         name: newTopicName,
-        content: "", // or omit if not required
+        content: "",
       };
 
       try {
@@ -107,7 +107,6 @@ const TopicsSideBar = ({
     }
   };
 
-  // Open Modal for Adding SubTopic
   const handleAddSubTopicClick = (parentId: string) => {
     setCurrentParentId(parentId);
     setIsAddingSubTopic(true);
@@ -124,17 +123,30 @@ const TopicsSideBar = ({
             className="text-white px-4 py-2 rounded shadow-md flex items-center gap-2"
             variant="filled"
             size="sm"
-            color="gray"
             onClick={() => {
               setCurrentParentId(null);
               setIsAddingSubTopic(false);
               setIsModalOpen(true);
             }}
           >
-            Add Topic
+            <IconPlus size={16} />
+            New
           </Button>
-        </Stack>
-      )}
+        )}
+      </div>
+
+      <div className="flex-1 overflow-y-auto">
+        {nodes.map((node) => (
+          <TreeNode
+            key={node.id}
+            node={node}
+            onNodeClick={onNodeClick}
+            onAddSubTopicClick={handleAddSubTopicClick}
+            isAdmin={isAdmin}
+          />
+        ))}
+      </div>
+
       <Modal
         opened={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -143,7 +155,7 @@ const TopicsSideBar = ({
         <TextInput
           placeholder={isAddingSubTopic ? "SubTopic Name" : "Topic Name"}
           value={newTopicName}
-          onChange={(event) => setNewTopicName(event.currentTarget.value || "")} // Safeguard against null/undefined
+          onChange={(event) => setNewTopicName(event.currentTarget.value || "")}
         />
         <Button
           onClick={handleModalConfirm}
