@@ -8,7 +8,7 @@ import { coy } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { useTheme } from "next-themes";
 import H2Extractor from "./H2";
-import { Box, Skeleton } from "@mantine/core";
+// import { Box, Skeleton } from "@mantine/core";
 
 // Define a type for the custom style function
 type CustomStyle = {
@@ -107,19 +107,19 @@ const ContentDisplay: React.FC = () => {
     fetchMDXContent();
   }, [data]);
 
-  if (isSingleDocLoading) {
-    return (
-      <Box className="flex-grow p-4">
-        <Skeleton height={40} radius="xl" />
-        <Skeleton height={40} mt={6} radius="xl" />
-        <Skeleton height={40} mt={6} width="80%" radius="xl" />
-        <Skeleton height={40} mt={6} radius="xl" />
-        <Skeleton height={200} mt={6} radius="xl" />
-      </Box>
-    );
-  }
+  // if (isSingleDocLoading) {
+  //   return (
+  //     <Box className="flex-grow p-4">
+  //       <Skeleton height={40} radius="xl" />
+  //       <Skeleton height={40} mt={6} radius="xl" />
+  //       <Skeleton height={40} mt={6} width="80%" radius="xl" />
+  //       <Skeleton height={40} mt={6} radius="xl" />
+  //       <Skeleton height={200} mt={6} radius="xl" />
+  //     </Box>
+  //   );
+  // }
 
-  if (singleDocError) return <div>Error: {singleDocError.message}</div>;
+  // if (singleDocError) return <div>Error: {singleDocError.message}</div>;
 
   return (
     <div className="w-full p-6 md:w-3/4 h-full overflow-y-auto">

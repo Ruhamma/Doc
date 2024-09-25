@@ -11,7 +11,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { MDXEditorMethods } from "@mdxeditor/editor";
-
+import { ForwardRefEditor } from "./component/mdxeditor/ForwardRefEditor";
 import { useRouter, useSearchParams } from "next/navigation";
 import TopicsSideBar from "./component/tree/TopicsSideBar";
 import { Topic } from "@/types/topic";
@@ -22,9 +22,9 @@ import {
   useDeleteTopicMutation,
 } from "../services/create_api";
 import SkeletonLayout from "./component/skeleton";
-import { IconDeviceFloppy, IconTrash } from "@tabler/icons-react";
-import Header from "../tests/Components/Header";
-import { ForwardRefEditor } from "./component/mdxeditor/ForwardRefEditor";
+import { IconDeviceFloppy, IconDownload, IconTrash } from "@tabler/icons-react";
+import Header from "../categories/Components/Header";
+import Sidebar from "./component/tree/Sidebar";
 
 type NotificationType =
   | { type: "error"; message: string }
@@ -38,7 +38,7 @@ export default function Admin() {
   const [activeTopic, setActiveTopic] = useState<Topic | null>(null);
   const [deleteModalOpened, setDeleteModalOpened] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
-  const [editedTopicName, setEditedTopicName] = useState<string>("");
+  const [editedTopicName, setEditedTopicName] = useState<string>(""); // State for topic name
   const ref = useRef<MDXEditorMethods>(null);
 
   const {
@@ -57,14 +57,6 @@ export default function Admin() {
     useUpdateDocMutation();
   const [deleteTopic, { isLoading: isDeleting, error: deleteError }] =
     useDeleteTopicMutation();
-
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-
-    if (!token) {
-      router.push("/login");
-    }
-  }, [router]);
 
   useEffect(() => {
     const timers = notifications.map((_, index) =>
@@ -126,7 +118,7 @@ export default function Admin() {
     }
   }, [topicsError]);
 
-  if (!localStorage.getItem("authToken") || topicsLoading || contentLoading) {
+  if (topicsLoading || contentLoading) {
     return <SkeletonLayout />;
   }
 
@@ -238,6 +230,7 @@ export default function Admin() {
             onNodeClick={handleNodeClick}
             isAdmin={true}
           />
+          {/* <Sidebar isAdmin={true} /> */}
 
           <Box className="editor flex-grow overflow-hidden relative">
             <Box className="editor-header p-4 bg-transparent border-b border-gray-200">
@@ -307,14 +300,8 @@ export default function Admin() {
             >
               Cancel
             </Button>
-            <Button
-              className="text-white px-4 py-2 rounded shadow-md hover:bg-red-600"
-              variant="filled"
-              color="red"
-              onClick={confirmDelete}
-              disabled={isDeleting}
-            >
-              Confirm
+            <Button color="red" onClick={confirmDelete} loading={isDeleting}>
+              Delete
             </Button>
           </Group>
         </Modal>

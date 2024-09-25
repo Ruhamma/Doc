@@ -1,19 +1,17 @@
 "use client";
 import React, { useState } from "react";
-import Sidebar from "../../admin/component/tree/Sidebar";
+import Sidebar from "../../../admin/component/tree/Sidebar";
 import SkeletonLayout from "@/app/admin/component/skeleton";
-import Header from "../Components/Header";
+import Header from "../Header";
 import TopicsSideBar from "@/app/admin/component/tree/TopicsSideBar";
 import { Topic } from "@/types/topic";
 import { useGetTopicsQuery } from "@/app/services/create_api";
-import ContentDisplay from "../Components/ContentDisplay";
+import ContentDisplay from "../ContentDisplay";
 import { Skeleton, Box } from "@mantine/core";
 
 const Page = () => {
   const { data: topics, error, isLoading } = useGetTopicsQuery();
-  const handleNodeClick = () => {
-
-  } 
+  const handleNodeClick = () => {};
 
   // if (isLoading) {
   //   // return (
@@ -42,16 +40,12 @@ const Page = () => {
       </div>
       <div className="flex p-4 md:p-0 md:pt-8 ">
         <div className=" hidden md:flex ">
-          <Sidebar isAdmin={false} onCategoryClick={function (categoryId: string): void {
-            throw new Error("Function not implemented.");
-          } } onSubCategoryClick={function (sub: any): void {
-            throw new Error("Function not implemented.");
-          } } />
-          {/* <TopicsSideBar
+          {/* <Sidebar isAdmin={false} /> */}
+          <TopicsSideBar
             topics={topics ?? []}
             onNodeClick={handleNodeClick}
             isAdmin={true}
-          /> */}
+          />
         </div>
 
         <ContentDisplay />
