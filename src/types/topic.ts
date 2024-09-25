@@ -61,3 +61,8 @@ export interface SingleTopic {
   content: string;
   parentId: string;
 }
+
+export interface NotificationType {
+  type: "error" | "info";
+  message: string;
+}
