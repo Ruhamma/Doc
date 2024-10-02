@@ -91,9 +91,8 @@ const Sidebar = ({ isAdmin }: SidebarProps) => {
                     </li>
                   ))}
                 </ul>
-              ) : (
-                <p>No subcategories available</p>
-              )}
+              ) : null}
+
             </li>
           ))}
         </ul>

@@ -42,7 +42,7 @@ export default function Home() {
               color="#2EC150"
               size="lg"
               onClick={() => {
-                router.push("/categories/749064e7-3172-4066-ba8d-542f956e3c5c");
+                router.push("/categories/d5d2ad8a-a089-43f8-a186-6dff38f7acd7");
               }}
             >
               Get started

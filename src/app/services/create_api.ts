@@ -9,7 +9,7 @@ import {
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://nest-docs-2.onrender.com",
+  baseUrl: "http://localhost:4000",
   prepareHeaders: (headers) => {
     const token = localStorage.getItem("authToken");
 
